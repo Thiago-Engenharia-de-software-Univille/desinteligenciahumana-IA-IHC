@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Desinteligência Humana</title>
+<meta name="description" content="A falta de inteligência devido à Inteligência Artificial — trabalho de IHC, Engenharia de Software, Univille.">
+<link rel="preload" href="assets/fonts/Marcellus.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/InterTight-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="modo-parede">
+
+<!-- Parede preta da abertura, empurrada pelo robô -->
+<div id="parede">
+  <svg class="robo" viewBox="0 0 330 400" aria-hidden="true">
+    <defs>
+      <pattern id="pontos" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <rect width="7" height="7" fill="#e6e6e6"/><circle cx="3.5" cy="3.5" r="1.6" fill="#8d8d8d"/>
+      </pattern>
+    </defs>
+
+    <g class="perna perna-tras">
+      <path class="contorno" d="M160 255 L112 318 L72 378"/>
+      <path class="miolo cinza" d="M160 255 L112 318 L72 378"/>
+      <path class="peca" d="M48 370 h48 a12 12 0 0 1 12 12 v8 h-70 v-6 a14 14 0 0 1 10-14z"/>
+    </g>
+
+    <g class="corpo">
+      <g class="braco-tras">
+        <path class="contorno" d="M224 150 L266 160 L304 146"/>
+        <path class="miolo cinza" d="M224 150 L266 160 L304 146"/>
+        <rect class="peca" x="300" y="126" width="22" height="40" rx="8"/>
+      </g>
+
+      <g transform="rotate(14 170 255)">
+        <rect class="peca" x="132" y="238" width="76" height="28" rx="10"/>
+        <rect class="peca" x="122" y="126" width="104" height="122" rx="22" fill="url(#pontos)"/>
+        <rect class="peca" x="140" y="148" width="60" height="46" rx="8"/>
+        <circle class="luz" cx="158" cy="171" r="8"/>
+        <path class="traco" d="M176 162 h14 M176 171 h14 M176 180 h14"/>
+        <rect class="peca" x="160" y="110" width="28" height="22"/>
+        <line class="traco" x1="168" y1="40" x2="160" y2="14"/>
+        <circle class="luz" cx="159" cy="11" r="8"/>
+        <rect class="peca" x="136" y="38" width="96" height="78" rx="20"/>
+        <circle class="peca" cx="150" cy="78" r="10" fill="url(#pontos)"/>
+        <rect x="184" y="55" width="44" height="36" rx="9" fill="#1e1e1e"/>
+        <rect class="olho" x="207" y="68" width="14" height="6" rx="3"/>
+        <path class="traco" d="M196 100 q12 6 24 0"/>
+      </g>
+
+      <g class="braco-frente">
+        <path class="contorno" d="M236 166 L280 180 L310 168"/>
+        <path class="miolo" d="M236 166 L280 180 L310 168"/>
+        <rect class="peca" x="304" y="146" width="22" height="42" rx="8"/>
+      </g>
+
+      <path class="esforco" d="M112 44 l-16 -10 M106 64 l-20 -2 M120 26 l-8 -14"/>
+    </g>
+
+    <g class="perna perna-frente">
+      <path class="contorno" d="M182 255 L214 314 L192 376"/>
+      <path class="miolo" d="M182 255 L214 314 L192 376"/>
+      <path class="peca" d="M176 368 h48 a12 12 0 0 1 12 12 v10 h-68 v-8 a14 14 0 0 1 8-14z"/>
+    </g>
+  </svg>
+
+  <button class="convite" type="button">Clique para começar</button>
+</div>
+
+<!-- Abertura -->
+<section id="hero" aria-label="Capa">
+  <p class="hero-alunos"><span>Alunos</span>Arthur, Henrique Leal, Henrique Miguel, Nicolas, Thiago W.</p>
+  <div class="hero-titulo">
+    <p>A falta de inteligência devido à</p>
+    <h1>Inteligência<br>Artificial</h1>
+  </div>
+  <p class="hero-curso"><span>Curso</span>Engenharia de Software — Univille</p>
+  <p class="hero-dica">Clique ou pressione →</p>
+</section>
+
+<!-- Palco com a pilha de cartões -->
+<main id="palco">
+  <header id="topo">
+    <div class="marca"><b>IA×IHC®</b><small>univille · 2026</small></div>
+    <div class="topo-item"><span>Disciplina</span>Interação Humano-Computador</div>
+    <div class="topo-item"><span>Grupo</span>Arthur · Henrique L. · Henrique M. · Nicolas · Thiago W.</div>
+  </header>
+
+  <aside id="esquerda">
+    <p class="rotulo">Seções</p>
+    <ul id="secoes">
+      <li data-secao="Introdução">Introdução</li>
+      <li data-secao="CSD’s">CSD’s</li>
+      <li data-secao="Problemas">Problemas</li>
+      <li data-secao="Público-alvo">Público-alvo</li>
+      <li data-secao="Entrevista">Entrevista</li>
+      <li data-secao="Conclusão">Conclusão</li>
+    </ul>
+    <dl id="detalhes"></dl>
+    <div id="numero"><p class="rotulo">Slide</p><strong>02</strong><span>/14</span></div>
+  </aside>
+
+  <div id="pilha">
+    <div id="tela" aria-hidden="true"></div>
+
+    <!-- 02 · Sumário -->
+    <article class="cartao" data-secao="Introdução" data-categoria="Visão geral" data-titulo="Sumário"
+      data-desc="O caminho da apresentação, da introdução à conclusão."
+      data-detalhes="Tema|IA nos estudos;Seções|6" data-cores="#1e1e1e,#ff4a4a,#7cc6dd">
+      <div class="conteudo c-sumario">
+        <div class="texto">
+          <p class="c-rotulo">Visão geral</p>
+          <h2>Sumário</h2>
+          <ol>
+            <li data-goto="3"><span>01</span>Introdução</li>
+            <li data-goto="4"><span>02</span>CSD’s</li>
+            <li data-goto="5"><span>03</span>Lista de problemas</li>
+            <li data-goto="7"><span>04</span>Público-alvo</li>
+            <li data-goto="9"><span>05</span>Entrevista</li>
+            <li data-goto="13"><span>06</span>Conclusão</li>
+          </ol>
+        </div>
+        <div class="foto" style="background-image:url(assets/img/robo-mao.jpg)"></div>
+      </div>
+    </article>
+
+    <!-- 03 · Introdução -->
+    <article class="cartao" data-secao="Introdução" data-categoria="01 — Introdução" data-titulo="Introdução"
+      data-desc="Por que o uso exagerado da IA preocupa: a perda de capacidades cognitivas."
+      data-detalhes="Seção|01 Introdução;Foco|Capacidades cognitivas" data-cores="#7cc6dd,#cfe9f2,#1e1e1e">
+      <div class="conteudo c-foto-esq">
+        <div class="foto" style="background-image:url(assets/img/robo-mao.jpg)"></div>
+        <div class="texto">
+          <p class="c-rotulo">01 — Introdução</p>
+          <h2>Introdução</h2>
+          <p class="grande">Escolhemos o tema referente ao uso recorrente da inteligência artificial, que está fazendo os usuários diminuírem suas capacidades cognitivas em decorrência do uso exagerado da própria IA.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 04 · CSD's -->
+    <article class="cartao" data-secao="CSD’s" data-categoria="02 — Matriz CSD" data-titulo="CSD’s"
+      data-desc="Certezas, suposições e dúvidas que guiaram a pesquisa."
+      data-detalhes="Seção|02 CSD’s;Ferramenta|Matriz CSD" data-cores="#ff4a4a,#1e1e1e,#d9d9d9">
+      <div class="conteudo c-colunas">
+        <p class="c-rotulo">02 — Certezas, suposições e dúvidas</p>
+        <div class="colunas3">
+          <section>
+            <h3><em>C</em>Certezas</h3>
+            <ul>
+              <li>A IA pode ser utilizada como ferramenta de apoio aos estudos.</li>
+              <li>Os estudantes podem recorrer à IA para esclarecer dúvidas e auxiliar na realização de trabalhos.</li>
+              <li>É importante verificar as informações fornecidas pela IA.</li>
+              <li>O questionário elaborado aborda o uso da IA, o raciocínio, a criatividade e a confiança nas respostas.</li>
+            </ul>
+          </section>
+          <section>
+            <h3><em>S</em>Suposições</h3>
+            <ul>
+              <li>O uso excessivo da IA pode aumentar a dependência dos estudantes dessa ferramenta.</li>
+              <li>Alguns estudantes podem ter mais dificuldade para realizar atividades sem auxílio da IA.</li>
+              <li>A IA pode ajudar na compreensão de conteúdos, dependendo da maneira como é utilizada.</li>
+              <li>Alguns estudantes podem aceitar respostas da IA sem verificar se estão corretas.</li>
+            </ul>
+          </section>
+          <section>
+            <h3><em>D</em>Dúvidas</h3>
+            <ul>
+              <li>O uso contínuo da IA pode prejudicar o raciocínio e a criatividade?</li>
+              <li>Os estudantes conseguem realizar atividades sem utilizar IA?</li>
+              <li>Os estudantes verificam se as respostas fornecidas pela IA estão corretas?</li>
+              <li>Como utilizar a IA nos estudos sem criar dependência?</li>
+              <li>Como a IA poderia ajudar os estudantes a pensar por conta própria?</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </article>
+
+    <!-- 05 · Lista de problemas -->
+    <article class="cartao" data-secao="Problemas" data-categoria="03 — Levantamento" data-titulo="Lista de problemas"
+      data-desc="Cinco problemas do dia a dia levantados pelo grupo."
+      data-detalhes="Seção|03 Problemas;Levantados|5;Escolhido|Uso da IA nos estudos" data-cores="#1e1e1e,#ff4a4a,#ebebeb">
+      <div class="conteudo">
+        <p class="c-rotulo">03 — Levantamento</p>
+        <h2 class="medio">Lista de problemas levantados</h2>
+        <ol class="problemas">
+          <li><span>1</span><b>Organização financeira</b><p>Dificuldade em controlar gastos e organizar o dinheiro no mês.</p></li>
+          <li><span>2</span><b>Descarte incorreto de lixo na cidade</b><p>Falta de informação sobre onde descartar cada tipo de resíduo.</p></li>
+          <li><span>3</span><b>Desperdício de alimentos por vencimento</b><p>Falta de controle sobre a validade dos alimentos e os produtos disponíveis em casa.</p></li>
+          <li><span>4</span><b>Fila de atendimento de vendas</b><p>Demora no atendimento em estabelecimentos devido à falta de organização.</p></li>
+          <li class="escolhido"><span>5</span><b>Uso da IA nos estudos <i>escolhido</i></b><p>Os estudantes podem acabar dependendo muito da IA para realizar atividades e ter dificuldades para pensar por conta própria.</p></li>
+        </ol>
+      </div>
+    </article>
+
+    <!-- 06 · Por que o problema 5 -->
+    <article class="cartao" data-secao="Problemas" data-categoria="03 — Justificativa" data-titulo="Problema escolhido"
+      data-desc="Pesquisas recentes confirmam o que víamos na rotina."
+      data-detalhes="Seção|03 Problemas;Fontes|Cetic.br · OCDE · Gerlich" data-cores="#ff4a4a,#ffb3b3,#1e1e1e">
+      <div class="conteudo">
+        <p class="c-rotulo">03 — Justificativa</p>
+        <h2 class="medio">Por que escolhemos o problema 5</h2>
+        <p class="lead">Dos cinco problemas que levantamos, a dependência da IA nos estudos foi o que mais apareceu na nossa rotina. E pesquisas recentes mostram que não é só impressão nossa:</p>
+        <div class="stats">
+          <div><strong>70%</strong><p>dos alunos do ensino médio que usam internet recorrem à IA generativa em pesquisas escolares</p><cite>TIC Educação 2024 (Cetic.br, 2025)</cite></div>
+          <div><strong>32%</strong><p>dos alunos receberam alguma orientação da escola sobre como usar essas ferramentas</p><cite>TIC Educação 2024 (Cetic.br, 2025)</cite></div>
+          <div><strong>48%</strong><p>dos estudantes brasileiros de 15 anos usam IA toda semana para aprender</p><cite>PISA 2025 (OCDE, 2026)</cite></div>
+        </div>
+        <p class="rodape"><b>Gerlich (2025)</b> ouviu 666 pessoas e encontrou relação entre o uso frequente de IA e notas mais baixas em pensamento crítico, com resultado pior justamente na faixa de 17 a 25 anos, a idade de quem está estudando.</p>
+      </div>
+    </article>
+
+    <!-- 07 · Público-alvo -->
+    <article class="cartao" data-secao="Público-alvo" data-categoria="04 — Público" data-titulo="Público-alvo"
+      data-desc="Estudantes que usam ou já usaram IA para estudar."
+      data-detalhes="Seção|04 Público-alvo;Quem|Ensino médio e superior" data-cores="#5fb8d3,#e8f6fa,#1e1e1e">
+      <div class="conteudo c-foto-dir">
+        <div class="texto">
+          <p class="c-rotulo">04 — Público</p>
+          <h2>Público-alvo</h2>
+          <p class="grande">Estudantes do ensino médio ou do ensino superior que utilizam ou já utilizaram ferramentas de Inteligência Artificial para estudar, pesquisar ou realizar trabalhos acadêmicos.</p>
+        </div>
+        <div class="foto" style="background-image:url(assets/img/maos.jpg)"></div>
+      </div>
+    </article>
+
+    <!-- 08 · Perfil do público-alvo -->
+    <article class="cartao" data-secao="Público-alvo" data-categoria="04 — Perfil" data-titulo="Perfil do público"
+      data-desc="Quem são, quais critérios usamos e por que eles."
+      data-detalhes="Seção|04 Público-alvo;Idade|15 a 25 anos;Região|Joinville" data-cores="#1e1e1e,#5fb8d3,#ff4a4a">
+      <div class="conteudo c-colunas">
+        <p class="c-rotulo">04 — Perfil do público-alvo</p>
+        <div class="colunas3">
+          <section>
+            <h3><em>01</em>Quem são</h3>
+            <ul>
+              <li>Alunos do ensino médio e da graduação, em geral entre 15 e 25 anos.</li>
+              <li>Pessoas que estudam usando celular ou computador com internet no dia a dia.</li>
+              <li>Colegas da UNIVILLE e estudantes de escolas da região de Joinville.</li>
+              <li>Gente com níveis diferentes de uso: de quem usa todo dia a quem usa pouco.</li>
+            </ul>
+          </section>
+          <section>
+            <h3><em>02</em>Critérios</h3>
+            <ul>
+              <li>Usar ou já ter usado alguma IA (ChatGPT, Gemini, Copilot…) para estudar.</li>
+              <li>Estar matriculado em alguma instituição de ensino.</li>
+              <li>Topar participar de forma voluntária.</li>
+              <li>Ter as respostas tratadas de forma anônima.</li>
+            </ul>
+          </section>
+          <section>
+            <h3><em>03</em>Por que eles</h3>
+            <ul>
+              <li>É a faixa que mais usa IA nos estudos.</li>
+              <li>Estão formando agora os hábitos de estudo que vão levar para o trabalho.</li>
+              <li>Recebem pouca orientação: só 32% tiveram instrução da escola (Cetic.br, 2025).</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </article>
+
+    <!-- 09 · Objetivo da entrevista -->
+    <article class="cartao" data-secao="Entrevista" data-categoria="05 — Entrevista" data-titulo="Objetivo"
+      data-desc="Entender como os estudantes usam a IA e o que ela muda no aprendizado."
+      data-detalhes="Seção|05 Entrevista;Investiga|Raciocínio · criatividade · autonomia" data-cores="#0a1a2f,#3fa9f5,#ffd23f">
+      <div class="conteudo c-foto-esq">
+        <div class="foto" style="background-image:url(assets/img/binario.jpg)"></div>
+        <div class="texto">
+          <p class="c-rotulo">05 — Entrevista</p>
+          <h2>Objetivo<br><small>da entrevista</small></h2>
+          <p class="grande">Compreender como os estudantes utilizam a Inteligência Artificial nas atividades acadêmicas e investigar suas percepções sobre os impactos dessa tecnologia no raciocínio, na criatividade, na autonomia e na aprendizagem.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 10 · Roteiro -->
+    <article class="cartao" data-secao="Entrevista" data-categoria="05 — Roteiro" data-titulo="Roteiro"
+      data-desc="Oito perguntas abertas, feitas individualmente."
+      data-detalhes="Seção|05 Entrevista;Perguntas|8 abertas;Formato|Individual" data-cores="#1e1e1e,#ebebeb,#ff4a4a">
+      <div class="conteudo">
+        <p class="c-rotulo">05 — Roteiro</p>
+        <h2 class="medio">Roteiro da entrevista</h2>
+        <p class="nota">Perguntas abertas, feitas individualmente com cada participante.</p>
+        <ol class="grade2 perguntas">
+          <li><span>1</span>Com que frequência você usa IA para estudar ou fazer trabalhos?</li>
+          <li><span>2</span>Para que você mais usa: tirar dúvidas, resumir, escrever, resolver exercícios?</li>
+          <li><span>3</span>Você costuma conferir se a resposta da IA está certa? Como faz isso?</li>
+          <li><span>4</span>Já entregou alguma atividade feita quase toda pela IA? Por quê?</li>
+          <li><span>5</span>Hoje, você sente mais dificuldade para começar uma tarefa sem a IA?</li>
+          <li><span>6</span>Acha que a IA mudou seu jeito de pensar, de criar ou de lembrar o conteúdo?</li>
+          <li><span>7</span>Sua escola ou faculdade já explicou como usar a IA nos estudos?</li>
+          <li><span>8</span>Como a IA poderia te ajudar a pensar sozinho, em vez de só dar a resposta?</li>
+        </ol>
+      </div>
+    </article>
+
+    <!-- 11 · Quem entrevistamos -->
+    <article class="cartao" data-secao="Entrevista" data-categoria="05 — Participantes" data-titulo="Quem entrevistamos"
+      data-desc="10 estudantes dentro do perfil do público-alvo."
+      data-detalhes="Seção|05 Entrevista;Participantes|10" data-cores="#ff4a4a,#1e1e1e,#ebebeb">
+      <div class="conteudo">
+        <p class="c-rotulo">05 — Participantes</p>
+        <h2 class="medio">Quem entrevistamos</h2>
+        <p class="nota">10 estudantes que usam IA nos estudos, dentro do perfil do público-alvo.</p>
+        <ol class="grade2 entrevistados">
+          <li><span>1</span><div><b>Alexandre Klostermann</b><small>Curso / escola · idade</small></div></li>
+          <li><span>2</span><div><b>Entrevistado 2</b><small>Curso / escola · idade</small></div></li>
+          <li><span>3</span><div><b>Entrevistado 3</b><small>Curso / escola · idade</small></div></li>
+          <li><span>4</span><div><b>Entrevistado 4</b><small>Curso / escola · idade</small></div></li>
+          <li><span>5</span><div><b>Entrevistado 5</b><small>Curso / escola · idade</small></div></li>
+          <li><span>6</span><div><b>Entrevistado 6</b><small>Curso / escola · idade</small></div></li>
+          <li><span>7</span><div><b>Entrevistado 7</b><small>Curso / escola · idade</small></div></li>
+          <li><span>8</span><div><b>Entrevistado 8</b><small>Curso / escola · idade</small></div></li>
+          <li><span>9</span><div><b>Entrevistado 9</b><small>Curso / escola · idade</small></div></li>
+          <li><span>10</span><div><b>Entrevistado 10</b><small>Curso / escola · idade</small></div></li>
+        </ol>
+      </div>
+    </article>
+
+    <!-- 12 · Resultados -->
+    <article class="cartao" data-secao="Entrevista" data-categoria="05 — Resultados" data-titulo="Resultados"
+      data-desc="O que os dados da entrevista mostraram."
+      data-detalhes="Seção|05 Entrevista;Status|Aguardando aplicação" data-cores="#ff4a4a,#ffd9d9,#1e1e1e">
+      <div class="conteudo">
+        <p class="c-rotulo">05 — Resultados</p>
+        <h2 class="medio">Resultados da entrevista</h2>
+        <p class="nota">Espaço reservado para os dados da entrevista, que serão incluídos depois da aplicação.</p>
+        <div class="stats">
+          <div><strong>10</strong><p>pessoas entrevistadas</p></div>
+          <div><strong>__%</strong><p>usam IA toda semana para estudar</p></div>
+          <div><strong>__%</strong><p>dizem conferir as respostas da IA</p></div>
+        </div>
+        <div class="caixa">
+          <h3>O que mais apareceu nas respostas</h3>
+          <ol>
+            <li><i>(preencher após a entrevista)</i></li>
+            <li><i>(preencher após a entrevista)</i></li>
+            <li><i>(preencher após a entrevista)</i></li>
+          </ol>
+        </div>
+      </div>
+    </article>
+
+    <!-- 13 · Conclusão -->
+    <article class="cartao" data-secao="Conclusão" data-categoria="06 — Conclusão" data-titulo="Conclusão"
+      data-desc="Quando a ferramenta de suporte vira substituta do pensamento."
+      data-detalhes="Seção|06 Conclusão;Conceito|Offloading cognitivo" data-cores="#2b1a6b,#c86bff,#1e1e1e">
+      <div class="conteudo c-foto-dir">
+        <div class="texto">
+          <p class="c-rotulo">06 — Conclusão</p>
+          <h2>Conclusão</h2>
+          <p class="citacao">A inteligência artificial atua como um obstáculo à inteligência humana quando promove o descarregamento cognitivo (<i>offloading</i>), transformando uma ferramenta de suporte em uma substituta do pensamento crítico.</p>
+        </div>
+        <div class="foto" style="background-image:url(assets/img/conclusao.jpg)"></div>
+      </div>
+    </article>
+
+    <!-- 14 · Referências -->
+    <article class="cartao" data-secao="Conclusão" data-categoria="Fontes" data-titulo="Referências"
+      data-desc="Pesquisas e reportagens citadas no trabalho."
+      data-detalhes="Referências|9;Período|2011 – 2026" data-cores="#1e1e1e,#8c8c8c,#ebebeb">
+      <div class="conteudo">
+        <p class="c-rotulo">Fontes</p>
+        <h2 class="medio">Referências</h2>
+        <div class="refs">
+          <p>CETIC.BR. <b>Pesquisa TIC Educação 2024</b>. São Paulo: Comitê Gestor da Internet no Brasil, 2025. Disponível em: https://cetic.br. Acesso em: 15 out. 2026.</p>
+          <p>GERLICH, Michael. AI tools in society: impacts on cognitive offloading and the future of critical thinking. <b>Societies</b>, v. 15, n. 1, p. 6, 2025. DOI: 10.3390/soc15010006.</p>
+          <p>KOSMYNA, Nataliya et al. <b>Your brain on ChatGPT</b>: accumulation of cognitive debt when using an AI assistant for essay writing task. arXiv, 2025. Disponível em: https://arxiv.org/abs/2506.08872. Acesso em: 15 out. 2026.</p>
+          <p>LEE, Hao-Ping et al. The impact of generative AI on critical thinking: self-reported reductions in cognitive effort and confidence effects from a survey of knowledge workers. In: CHI CONFERENCE ON HUMAN FACTORS IN COMPUTING SYSTEMS, 2025. <b>Anais […]</b>. New York: ACM, 2025. DOI: 10.1145/3706598.3713778.</p>
+          <p>METRÓPOLES. Google/Ipsos: para 79% dos brasileiros, IA é ferramenta de aprendizado. Brasília, 15 jan. 2026. Disponível em: https://www.metropoles.com. Acesso em: 15 out. 2026.</p>
+          <p>RISKO, Evan F.; GILBERT, Sam J. Cognitive offloading. <b>Trends in Cognitive Sciences</b>, v. 20, n. 9, p. 676-688, 2016.</p>
+          <p>SBT NEWS. Quase metade dos alunos no Brasil usa IA para estudar. São Paulo, 8 set. 2026. Disponível em: https://sbtnews.sbt.com.br. Acesso em: 15 out. 2026.</p>
+          <p>SPARROW, Betsy; LIU, Jenny; WEGNER, Daniel M. Google effects on memory: cognitive consequences of having information at our fingertips. <b>Science</b>, v. 333, n. 6043, p. 776-778, 2011.</p>
+          <p>UNESCO. <b>Guidance for generative AI in education and research</b>. Paris: UNESCO, 2023.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <aside id="lista" aria-label="Todos os slides"><div id="lista-trilho"></div></aside>
+  <div id="cores" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <p class="dica-scroll">Role ou use ← →</p>
+</main>
+
+<nav id="hud" aria-label="Navegação">
+  <button id="btn-prev" aria-label="Slide anterior">←</button>
+  <span id="contador">1 / 14</span>
+  <button id="btn-next" aria-label="Próximo slide">→</button>
+  <button id="btn-overview" class="texto-btn">Visão geral <i>O</i></button>
+  <button id="btn-fullscreen" class="texto-btn">Tela cheia <i>F</i></button>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>
