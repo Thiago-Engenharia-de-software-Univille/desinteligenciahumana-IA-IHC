@@ -9,7 +9,8 @@ Site estático: abra `index.html` no navegador (funciona offline) ou publique a 
 |---|---|
 | → · ↓ · espaço · rolar o mouse | próximo slide |
 | ← · ↑ · rolar para cima | slide anterior |
-| O | visão geral (clique num cartão para abrir) |
+| O | visão geral em blocos (clique num cartão para abrir) |
+| L | visão geral em lista: a gaveta com detalhes e lista ao redor; ← → passam de cartão, Enter ou clique abre |
 | Esc | fecha a visão geral |
 | F | tela cheia |
 | Home / End | primeiro / último slide |

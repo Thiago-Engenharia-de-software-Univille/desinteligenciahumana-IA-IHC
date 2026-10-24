@@ -21,6 +21,50 @@
   const laterais = ['#esquerda', '#lista', '#cores', '.dica-scroll'].map(s => document.querySelector(s));
   const topo = document.getElementById('topo');
 
+  // ---------- Peças mecânicas desenhadas no carregamento ----------
+  const arred = v => Math.round(v * 10) / 10;
+  const polar = (raio, ang) => `${arred(raio * Math.cos(ang))} ${arred(raio * Math.sin(ang))}`;
+
+  // engrenagem centrada em 0,0: data-eng="dentes,raio externo,raio interno,furo"
+  document.querySelectorAll('[data-eng]').forEach(el => {
+    const [n, R, r, furo] = el.dataset.eng.split(',').map(Number);
+    const passo = 2 * Math.PI / n;
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const a = i * passo;
+      pts.push(polar(r, a - passo * .30), polar(R, a - passo * .16), polar(R, a + passo * .16), polar(r, a + passo * .30));
+    }
+    let d = `M${pts.join(' L')} Z`;
+    if (furo) d += ` M${furo} 0 A${furo} ${furo} 0 1 0 ${-furo} 0 A${furo} ${furo} 0 1 0 ${furo} 0 Z`;
+    el.setAttribute('d', d);
+    el.setAttribute('fill-rule', 'evenodd');
+  });
+
+  // medidor semicircular: data-valor="0–100" (vazio = ainda sem dado)
+  const NS = 'http://www.w3.org/2000/svg';
+  document.querySelectorAll('.medidor').forEach(svg => {
+    const v = svg.dataset.valor === '' ? null : +svg.dataset.valor;
+    const cx = 110, cy = 112, r = 88;
+    const ponto = (p, raio) => [cx - raio * Math.cos(Math.PI * p / 100), cy - raio * Math.sin(Math.PI * p / 100)];
+    const add = (tag, attrs) => {
+      const el = document.createElementNS(NS, tag);
+      for (const k in attrs) el.setAttribute(k, attrs[k]);
+      svg.appendChild(el);
+      return el;
+    };
+    const arco = `M${cx - r} ${cy} A${r} ${r} 0 0 1 ${cx + r} ${cy}`;
+    add('path', { d: arco, class: 'trilho' });
+    if (v === null) add('path', { d: arco, class: 'vazio' });
+    else add('path', { d: arco, class: 'valor', pathLength: 100, style: `--v:${v}` });
+    for (let k = 0; k <= 10; k++) {
+      const [x1, y1] = ponto(k * 10, k % 5 ? 64 : 58), [x2, y2] = ponto(k * 10, 72);
+      add('line', { x1: arred(x1), y1: arred(y1), x2: arred(x2), y2: arred(y2), class: k % 5 ? 'risco' : 'risco maior' });
+    }
+    add('line', { x1: cx, y1: cy, x2: cx - 70, y2: cy, class: 'ponteiro', style: `--ang:${(v ?? 0) * 1.8}deg` });
+    add('circle', { cx, cy, r: 13, class: 'eixo' });
+    add('circle', { cx, cy, r: 4.5, class: 'eixo-miolo' });
+  });
+
   // ---------- Lista da direita ----------
   const itens = cartoes.map((c, i) => {
     const el = document.createElement('div');
@@ -29,7 +73,7 @@
     el.querySelector('small').textContent = c.dataset.categoria;
     el.querySelector('strong').textContent = c.dataset.titulo;
     el.querySelector('p').textContent = c.dataset.desc;
-    el.addEventListener('click', () => irPara(i));
+    el.addEventListener('click', () => escolher(i));
     trilho.appendChild(el);
     return el;
   });
@@ -38,9 +82,11 @@
   // pos:   posição contínua na pilha (0 = primeiro cartão)
   // foco:  1 = cartão atual em tela cheia, 0 = visão da pilha
   // geral: 1 = visão geral em grade
-  // zoom:  < 1 enquanto a pilha gira de um cartão para outro
+  // zoom:  < 1 enquanto a pilha gira de um cartão para outro (afasta para mostrar mais slides)
   // emFoco: cartão que se afasta/aproxima da tela cheia (o antigo na saída, o novo na chegada)
   const est = { pos: 0, foco: 0, geral: 0, zoom: 1, emFoco: 0 };
+  const AFASTAR = .42;                // quanto a pilha encolhe no meio da troca
+  const ZOOM_LISTA = .72;             // tamanho da gaveta na visão em lista
   let modo = 'parede';                // parede → empurrando → hero → pilha
   let alvo = 0;
   let anim = null, laco = null;
@@ -82,19 +128,22 @@
     }
   }
 
-  // Posição de um cartão na pilha curva (d = distância até o cartão atual)
+  // Posição de um cartão na "gaveta de arquivos" (d = distância até o cartão atual):
+  // os cartões ficam numa diagonal, os anteriores subindo para a direita e os próximos
+  // descendo para a esquerda; longe do atual eles se amontoam como fichas tombadas
   function naPilha(d) {
     const a = Math.abs(d), s = Math.sign(d);
     const perto = Math.min(a, 1), longe = Math.max(a - 1, 0);
     const z = est.zoom;
     return {
-      x: m.ox - s * (m.w * .10 * perto + m.w * .035 * longe) * z,
-      y: m.oy + s * (m.h * .80 * perto + m.h * .13 * longe) * z,
-      z: -a * 90,
-      rx: -s * (34 * perto + 5 * longe),
-      rz: 6 * perto,
-      s: (m.w / m.wf) * (1 - .12 * perto - .025 * longe) * z,
-      op: Math.max(0, Math.min(1, 1 - (a - 4.2) * .6)),
+      x: m.ox - s * (m.w * .46 * perto + m.w * .075 * longe) * z,
+      y: m.oy + s * (m.h * 1.08 * perto + m.h * .2 * longe) * z,
+      z: 0,
+      rx: 22 * perto,
+      ry: -14 * perto,
+      rz: 7 * perto,
+      s: (m.w / m.wf) * (1 - .04 * perto) * z,
+      op: Math.max(0, Math.min(1, 1 - (a - 6.5) * .6)),
     };
   }
 
@@ -108,13 +157,13 @@
     return {
       x: (col - (naLinha - 1) / 2) * cw,
       y: (lin - (linhas - 1) / 2) * ch + 10,
-      z: 0, rx: 0, rz: 0,
+      z: 0, rx: 0, ry: 0, rz: 0,
       s: Math.min(cw * .9 / m.wf, ch * .86 / m.hf),
       op: 1,
     };
   }
 
-  const CHEIA = { x: 0, y: 0, z: 0, rx: 0, rz: 0, s: 1, op: 1 };
+  const CHEIA = { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0, s: 1, op: 1 };
 
   function misturar(p, q, t) {
     if (t <= 0) return p;
@@ -134,18 +183,21 @@
 
       c.style.visibility = f.op <= .01 ? 'hidden' : 'visible';
       c.style.opacity = f.op;
-      c.style.zIndex = focado ? 1000 : 990 - Math.round(Math.abs(d) * 10);
+      // ordem de trás para a frente ao longo da diagonal, como fichas numa gaveta
+      c.style.zIndex = focado ? 1000 : 500 + Math.round(d * 10);
       c.style.transform = focado && foco >= 1 ? 'none' :
-        `translate3d(${f.x}px, ${f.y}px, ${f.z}px) rotateZ(${f.rz}deg) rotateX(${f.rx}deg) scale(${f.s})`;
+        `translate3d(${f.x}px, ${f.y}px, ${f.z}px) rotateZ(${f.rz}deg) rotateX(${f.rx}deg) rotateY(${f.ry}deg) scale(${f.s})`;
       c.style.boxShadow = focado ? `0 18px 50px rgba(0,0,0,${.1 * (1 - foco)})` : '';
     });
 
     // fundo da tela cheia e colunas laterais
     tela.style.visibility = foco > .01 ? 'visible' : 'hidden';
     tela.style.opacity = foco;
-    const lateral = (1 - foco) * (1 - geral);
+    // as colunas somem bem antes do cartão chegar à tela cheia, para não ficarem por cima dele
+    const livre = (1 - foco) ** 3;
+    const lateral = livre * (1 - geral);
     laterais.forEach(el => { el.style.opacity = lateral; });
-    topo.style.opacity = 1 - foco;
+    topo.style.opacity = livre;
     body.classList.toggle('tela-cheia', foco > .5);
 
     // a lista acompanha a pilha
@@ -186,6 +238,7 @@
     (c.dataset.cores || '').split(',').forEach((cor, k) => { if (cores[k]) cores[k].style.background = cor; });
     secoes.forEach(li => li.classList.toggle('ativa', li.dataset.secao === c.dataset.secao));
     itens.forEach((el, k) => el.classList.toggle('ativo', k === i));
+    cartoes.forEach((el, k) => el.classList.toggle('ativo', k === i));
   }
 
   function atualizarContador() {
@@ -206,7 +259,7 @@
     const dist = Math.abs(i - de.pos);
     alvo = i;
     atualizarContador();
-    body.classList.remove('visao-geral');
+    definirVisao(null);
     body.classList.add('trocando');
 
     let trocou = false;
@@ -219,24 +272,69 @@
       est.foco = entra > 0 ? entra : de.foco * (1 - sai);
       est.geral = de.geral * (1 - suave(fase(t, 0, .4)));
       est.pos = lerp(de.pos, i, suave(gira));
-      est.zoom = 1 - .12 * Math.sin(Math.PI * gira) * Math.min(dist, 1);
+      est.zoom = lerp(de.zoom, 1, suave(t)) - AFASTAR * Math.sin(Math.PI * gira) * Math.min(dist, 1);
       if (gira >= .5 && !trocou) { trocou = true; mostrarInfo(i); }
       if (gira >= 1) body.classList.remove('trocando');
     }, () => { est.foco = 1; est.zoom = 1; });
   }
 
+  // ---------- Visões gerais: em blocos (grade) e em lista (gaveta navegável) ----------
+  let visao = null;                   // null | 'blocos' | 'lista'
+  const emGeral = () => visao === 'blocos';
+  const emLista = () => visao === 'lista';
+  const dica = document.querySelector('.dica-scroll');
+
+  function definirVisao(v) {
+    visao = v;
+    body.classList.toggle('visao-geral', v === 'blocos');
+    body.classList.toggle('visao-lista', v === 'lista');
+    dica.textContent = v === 'lista' ? 'Role ou use ← → · Enter ou clique para abrir' : 'Role ou use ← →';
+  }
+
   function abrirGeral() {
     if (modo !== 'pilha') return;
     const de = { ...est };
-    body.classList.add('visao-geral');
+    definirVisao('blocos');
     animar(1200, t => {
       est.foco = de.foco * (1 - suave(fase(t, 0, .45)));
       est.geral = lerp(de.geral, 1, suave(fase(t, .3, 1)));
-      est.zoom = 1;
+      est.zoom = lerp(de.zoom, 1, suave(t));
     });
   }
 
-  const emGeral = () => body.classList.contains('visao-geral');
+  // Lista: sai da tela cheia e fica na gaveta, com detalhes, número e lista ao redor
+  function abrirLista() {
+    if (modo !== 'pilha') return;
+    const de = { ...est };
+    definirVisao('lista');
+    animar(1100, t => {
+      est.foco = de.foco * (1 - suave(fase(t, 0, .55)));
+      est.geral = de.geral * (1 - suave(fase(t, 0, .6)));
+      est.zoom = lerp(de.zoom, ZOOM_LISTA, suave(fase(t, .1, 1)));
+    });
+  }
+
+  // Na lista, passa para outro cartão sem abrir em tela cheia (como no site de inspiração)
+  function moverLista(i) {
+    i = Math.max(0, Math.min(N - 1, i));
+    if (i === alvo && !anim) return;
+    const de = { ...est };
+    const dist = Math.abs(i - de.pos);
+    alvo = i;
+    atualizarContador();
+    body.classList.add('trocando');
+    let trocou = false;
+    animar(Math.min(800 + 140 * dist, 1600), t => {
+      const e = suave(t);
+      est.pos = lerp(de.pos, i, e);
+      est.zoom = lerp(de.zoom, ZOOM_LISTA, e);
+      if (t >= .5 && !trocou) { trocou = true; mostrarInfo(i); }
+      if (t >= 1) body.classList.remove('trocando');
+    });
+  }
+
+  // clique na lista da direita ou nas seções
+  function escolher(i) { emLista() ? moverLista(i) : irPara(i); }
 
   // Sai da capa: o painel cinza sobe, a pilha entra de baixo e o primeiro cartão abre em tela cheia
   function entrarNaPilha(i = 0) {
@@ -259,6 +357,76 @@
     animar(700, t => { est.foco = de.foco * (1 - suave(t)); }, () => definirModo('hero'));
   }
 
+  // ---------- Robô: ciclo de caminhada ----------
+  // A fase do passo é derivada de quanto a parede já andou, então o pé de apoio
+  // acompanha o chão em vez de escorregar. Unidades = viewBox do SVG (330 × 400).
+  const robo = (() => {
+    const svg = parede.querySelector('.robo');
+    const $ = id => svg.getElementById(id);
+    const COXA = 70, CANELA = 72, SOLO = 398, SOLA = 12;
+    const PASSADA = 216;              // quanto o corpo avança por ciclo completo
+    const rad = Math.PI / 180;
+    const pernas = [
+      { el: $('perna-tras'), x: 163, defasagem: 0 },
+      { el: $('perna-frente'), x: 179, defasagem: .5 },
+    ];
+    const bracos = [
+      { el: $('braco-tras'), ombro: [224, 150], cotovelo: [266, 160], mao: [304, 146] },
+      { el: $('braco-frente'), ombro: [236, 166], cotovelo: [280, 180], mao: [310, 168] },
+    ];
+    const tronco = $('tronco'), antena = $('antena');
+
+    // ângulos de uma perna (graus; positivo = pé para trás)
+    function angulos(fase) {
+      const a = 2 * Math.PI * fase;
+      return {
+        quadril: 6 + 20 * Math.sin(a),                              // apoio: a perna vai de -14° a 26°
+        joelho: 6 + 40 * Math.max(0, -Math.cos(a + .5)) ** 1.5,     // dobra logo após o impulso, estica antes de pisar
+        ponta: 24 * Math.max(0, Math.sin(a + .4)) ** 3,             // calcanhar sobe no impulso
+      };
+    }
+
+    function pose(fase) {
+      const ps = pernas.map(p => {
+        const g = angulos(fase + p.defasagem);
+        const q = g.quadril * rad, j = (g.quadril + g.joelho) * rad;
+        const joelho = [p.x - COXA * Math.sin(q), COXA * Math.cos(q)];
+        const tornozelo = [joelho[0] - CANELA * Math.sin(j), joelho[1] + CANELA * Math.cos(j)];
+        return { p, g, joelho, tornozelo };
+      });
+      // o pé mais baixo fica apoiado no chão; o quadril sobe e desce junto
+      const quadrilY = SOLO - SOLA - Math.max(...ps.map(l => l.tornozelo[1]));
+      const balanco = quadrilY - 252;
+
+      for (const { p, g, joelho, tornozelo } of ps) {
+        const d = `M${p.x} ${quadrilY} L${joelho[0]} ${joelho[1] + quadrilY} L${tornozelo[0]} ${tornozelo[1] + quadrilY}`;
+        p.el.querySelectorAll('.contorno, .miolo').forEach(el => el.setAttribute('d', d));
+        p.el.querySelector('.pe').setAttribute('transform',
+          `translate(${tornozelo[0]} ${tornozelo[1] + quadrilY}) rotate(${g.ponta})`);
+      }
+
+      const a = 4 * Math.PI * fase;
+      tronco.setAttribute('transform', `translate(0 ${balanco}) rotate(${14 + 1.2 * Math.sin(a)} 170 255)`);
+      antena.setAttribute('transform', `rotate(${5 * Math.sin(a - 1)} 168 40)`);
+      // ombros acompanham o tronco; as mãos ficam paradas na parede
+      for (const b of bracos) {
+        const d = `M${b.ombro[0]} ${b.ombro[1] + balanco} L${b.cotovelo[0]} ${b.cotovelo[1] + balanco / 2} L${b.mao[0]} ${b.mao[1]}`;
+        b.el.querySelectorAll('.contorno, .miolo').forEach(el => el.setAttribute('d', d));
+      }
+    }
+
+    function andar() {
+      if (modo !== 'empurrando') return;
+      const x = new DOMMatrix(getComputedStyle(parede).transform).m41;
+      const escala = svg.getBoundingClientRect().height / 400;
+      pose(x / (PASSADA * escala));
+      requestAnimationFrame(andar);
+    }
+
+    pose(0);
+    return { andar };
+  })();
+
   // ---------- Abertura ----------
   function definirModo(novo) {
     modo = novo;
@@ -269,6 +437,7 @@
   function empurrarParede() {
     if (modo !== 'parede') return;
     definirModo('empurrando');
+    requestAnimationFrame(robo.andar);
     parede.addEventListener('animationend', () => { if (modo === 'empurrando') definirModo('hero'); }, { once: true });
   }
 
@@ -278,6 +447,7 @@
     if (modo === 'empurrando') return definirModo('hero');
     if (modo === 'hero') return entrarNaPilha(0);
     if (emGeral()) return irPara(alvo);
+    if (emLista()) return moverLista(alvo + 1);
     irPara(alvo + 1);
   }
 
@@ -285,6 +455,7 @@
     if (modo === 'parede') return empurrarParede();
     if (modo !== 'pilha') return;
     if (emGeral()) return irPara(alvo);
+    if (emLista()) return moverLista(alvo - 1);
     if (alvo === 0) return voltarParaCapa();
     irPara(alvo - 1);
   }
@@ -292,6 +463,11 @@
   function alternarGeral() {
     if (modo !== 'pilha') return;
     emGeral() ? irPara(alvo) : abrirGeral();
+  }
+
+  function alternarLista() {
+    if (modo !== 'pilha') return;
+    emLista() ? irPara(alvo) : abrirLista();
   }
 
   function telaCheia() {
@@ -302,14 +478,17 @@
   addEventListener('keydown', e => {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     switch (e.key) {
-      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter':
+      case 'Enter':
+        e.preventDefault(); emLista() ? irPara(alvo) : proximo(); break;
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ':
         e.preventDefault(); proximo(); break;
       case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace':
         e.preventDefault(); anterior(); break;
-      case 'Home': irPara(0); break;
-      case 'End': modo === 'pilha' ? irPara(N - 1) : entrarNaPilha(N - 1); break;
+      case 'Home': escolher(0); break;
+      case 'End': modo === 'pilha' ? escolher(N - 1) : entrarNaPilha(N - 1); break;
       case 'o': case 'O': alternarGeral(); break;
-      case 'Escape': if (emGeral()) irPara(alvo); break;
+      case 'l': case 'L': alternarLista(); break;
+      case 'Escape': if (visao) irPara(alvo); break;
       case 'f': case 'F': telaCheia(); break;
     }
   });
@@ -341,21 +520,37 @@
     toque = null;
   });
 
-  // Na visão geral, clicar num cartão abre ele em tela cheia
-  cartoes.forEach((c, i) => c.addEventListener('click', () => { if (emGeral()) irPara(i); }));
+  // Blocos: clicar abre o cartão. Lista: clicar no atual abre, num vizinho passa até ele
+  cartoes.forEach((c, i) => c.addEventListener('click', () => {
+    if (emGeral()) irPara(i);
+    else if (emLista()) i === alvo ? irPara(i) : moverLista(i);
+  }));
+
+  // Destaque ao passar o mouse: cartão e item da lista acendem juntos
+  cartoes.forEach((c, i) => {
+    const marcar = ligado => () => {
+      c.classList.toggle('destaque', ligado);
+      itens[i].classList.toggle('destaque', ligado);
+    };
+    for (const el of [c, itens[i]]) {
+      el.addEventListener('mouseenter', marcar(true));
+      el.addEventListener('mouseleave', marcar(false));
+    }
+  });
 
   document.querySelectorAll('[data-goto]').forEach(el => el.addEventListener('click', e => {
-    if (emGeral()) return;
+    if (visao) return;
     e.stopPropagation();
     irPara(+el.dataset.goto - 2);
   }));
 
   secoes.forEach(li => li.addEventListener('click', () =>
-    irPara(cartoes.findIndex(c => c.dataset.secao === li.dataset.secao))));
+    escolher(cartoes.findIndex(c => c.dataset.secao === li.dataset.secao))));
 
   document.getElementById('btn-next').onclick = proximo;
   document.getElementById('btn-prev').onclick = anterior;
-  document.getElementById('btn-overview').onclick = alternarGeral;
+  document.getElementById('btn-blocos').onclick = alternarGeral;
+  document.getElementById('btn-lista').onclick = alternarLista;
   document.getElementById('btn-fullscreen').onclick = telaCheia;
   document.getElementById('hero').addEventListener('click', proximo);
   parede.addEventListener('click', empurrarParede);

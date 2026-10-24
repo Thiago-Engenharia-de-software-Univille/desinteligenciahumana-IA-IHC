@@ -78,15 +78,10 @@ body:not(.modo-parede) .convite { opacity: 0; animation: none; }
 .robo .luz { fill: var(--vermelho); stroke: var(--tinta); stroke-width: 5; }
 .robo .olho { fill: #fff; }
 
-.robo .perna, .robo .corpo, .robo .esforco { transform-box: view-box; animation-play-state: paused; }
-.robo .perna-tras { transform-origin: 165px 255px; animation: passo .7s ease-in-out infinite alternate; }
-.robo .perna-frente { transform-origin: 182px 255px; animation: passo .7s ease-in-out infinite alternate-reverse; }
-.robo .corpo { animation: balanco .35s ease-in-out infinite alternate; }
+.robo .esforco, .robo .olho { animation-play-state: paused; }
 .robo .esforco { animation: tremer .18s steps(2) infinite; }
 .robo .olho { animation: piscar 2.4s infinite; transform-box: fill-box; transform-origin: center; }
 body.modo-empurrando .robo * { animation-play-state: running; }
-@keyframes passo { from { rotate: -9deg; } to { rotate: 9deg; } }
-@keyframes balanco { to { translate: 0 4px; } }
 @keyframes tremer { 50% { translate: -2px 1px; } }
 @keyframes piscar { 0%, 92%, 100% { scale: 1 1; } 96% { scale: 1 .15; } }
 
@@ -198,8 +193,21 @@ body.trocando #detalhes, body.trocando #numero strong { filter: blur(10px); opac
   box-shadow: 0 1px 0 rgba(0, 0, 0, .04), 0 18px 50px rgba(0, 0, 0, .10);
   backface-visibility: hidden;
 }
-body.visao-geral .cartao { cursor: pointer; }
-body.visao-geral .cartao:hover { outline: 3px solid var(--vermelho); }
+body.visao-geral .cartao, body.visao-lista .cartao { cursor: pointer; }
+body.visao-geral #btn-blocos, body.visao-lista #btn-lista { color: var(--vermelho); }
+body.visao-geral .cartao.destaque, body.visao-lista .cartao.destaque { outline: 12px solid var(--vermelho); outline-offset: -12px; }
+/* etiqueta dizendo o que o clique faz (escala junto com o cartão) */
+body.visao-geral .cartao.destaque::after, body.visao-lista .cartao.destaque::after {
+  content: "Ir para este slide →";
+  position: absolute; left: 12px; top: 12px; z-index: 10;
+  padding: 14px 26px;
+  background: var(--vermelho); color: #fff;
+  font: 600 30px/1 var(--grotesca); letter-spacing: .04em; text-transform: uppercase;
+}
+body.visao-geral .cartao.destaque::after { content: "Abrir em tela cheia ↵"; font-size: 52px; padding: 22px 40px; }
+body.visao-lista .cartao.ativo.destaque::after { content: "Abrir em tela cheia ↵"; }
+.item-lista.destaque { opacity: 1 !important; }
+#lista .item-lista.destaque strong { color: var(--vermelho); }
 
 /* Conteúdo desenhado em 1200 × 675 e escalado para o tamanho do cartão */
 .conteudo {
@@ -207,11 +215,38 @@ body.visao-geral .cartao:hover { outline: 3px solid var(--vermelho); }
   display: flex; flex-direction: column; justify-content: center;
   transform-origin: 0 0;
   transform: scale(var(--k, 1));
-  padding: 52px 60px;
+  padding: 56px 72px;
   position: relative;
   font-size: 19px; line-height: 1.45;
+  /* chapa técnica: grade de pontos bem clara */
+  background-image: radial-gradient(circle, #deded9 1.1px, transparent 1.5px);
+  background-size: 26px 26px;
+  background-position: 13px 13px;
 }
-.c-rotulo { font-size: 14px; margin-bottom: 14px; }
+/* parafusos nos quatro cantos do cartão */
+.conteudo::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 5;
+  --p: radial-gradient(circle, #a8a8a8 0 2.5px, #fff 3px 6px, var(--tinta) 6.5px 9px, transparent 9.5px);
+  background:
+    var(--p) 14px 14px / 24px 24px no-repeat,
+    var(--p) calc(100% - 14px) 14px / 24px 24px no-repeat,
+    var(--p) 14px calc(100% - 14px) / 24px 24px no-repeat,
+    var(--p) calc(100% - 14px) calc(100% - 14px) / 24px 24px no-repeat;
+}
+
+/* plaqueta de identificação */
+.c-rotulo {
+  align-self: flex-start;
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--tinta);
+  border: 1.5px solid var(--tinta);
+  padding: 5px 12px;
+  margin-bottom: 16px;
+  background: var(--papel);
+}
+.c-rotulo::before, .c-rotulo::after { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--tinta); }
+
 .conteudo h2 {
   font-family: var(--serifa); font-weight: normal; text-transform: uppercase;
   font-size: 76px; line-height: .95; letter-spacing: -.01em;
@@ -221,73 +256,160 @@ body.visao-geral .cartao:hover { outline: 3px solid var(--vermelho); }
 .conteudo .grande { font-size: 25px; line-height: 1.45; }
 .conteudo .nota { font-size: 16px; color: var(--apagado); font-style: italic; margin-top: 8px; }
 .conteudo .lead { font-size: 18px; margin-top: 14px; max-width: 980px; }
-
-/* Layout com foto de um lado */
-.c-foto-esq, .c-foto-dir { display: grid; padding: 0; }
-.c-foto-esq { grid-template-columns: 44% 1fr; }
-.c-foto-dir { grid-template-columns: 1fr 42%; }
-.foto { background-size: cover; background-position: center; }
-.c-foto-esq .texto, .c-foto-dir .texto {
-  padding: 52px 60px;
-  display: flex; flex-direction: column; justify-content: center; gap: 26px;
-}
-.c-foto-esq .texto .c-rotulo, .c-foto-dir .texto .c-rotulo { margin-bottom: -10px; }
 .citacao { font-family: var(--serifa); font-size: 30px; line-height: 1.32; }
 
+/* ---------- Ilustrações mecânicas (mesmo traço do robô) ---------- */
+.c-ilustra-esq, .c-ilustra-dir { display: grid; padding: 0; }
+.c-ilustra-esq { grid-template-columns: 44% 1fr; }
+.c-ilustra-dir { grid-template-columns: 1fr 42%; }
+.c-ilustra-esq .texto, .c-ilustra-dir .texto {
+  padding: 56px 72px;
+  display: flex; flex-direction: column; justify-content: center; gap: 26px;
+}
+.c-ilustra-esq .texto .c-rotulo, .c-ilustra-dir .texto .c-rotulo { margin-bottom: -10px; }
+
+.ilustra {
+  position: relative;
+  background: var(--fundo);
+  background-image: radial-gradient(circle, #cfcfca 1.2px, transparent 1.6px);
+  background-size: 22px 22px;
+  overflow: hidden;
+  display: grid; place-items: center;
+}
+.c-ilustra-esq .ilustra { border-right: 2px solid var(--tinta); }
+.c-ilustra-dir .ilustra { border-left: 2px solid var(--tinta); }
+/* faixa de advertência no pé do painel */
+.ilustra::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 16px;
+  background: repeating-linear-gradient(-45deg, var(--tinta) 0 14px, var(--vermelho) 14px 28px);
+  border-top: 2px solid var(--tinta);
+}
+.desenho { width: 88%; height: 88%; overflow: visible; }
+
+.desenho .peca, .eng { fill: #fff; stroke: var(--tinta); stroke-width: 5; stroke-linejoin: round; }
+.desenho .peca.grossa { stroke-width: 7; }
+.desenho .peca[fill] { stroke: var(--tinta); }
+.desenho .traco { fill: none; stroke: var(--tinta); stroke-width: 5; stroke-linecap: round; }
+.desenho .traco.grosso { stroke-width: 9; }
+.desenho .traco.fino { stroke-width: 3; }
+.desenho .traco.vermelho { stroke: var(--vermelho); stroke-width: 4; }
+.desenho .traco.seta { stroke-width: 4; }
+.desenho .luz { fill: var(--vermelho); stroke: var(--tinta); stroke-width: 5; }
+.desenho .olho { fill: #fff; }
+.desenho .rebite { fill: var(--tinta); }
+.desenho .contorno { fill: none; stroke: var(--tinta); stroke-width: 46; stroke-linecap: round; stroke-linejoin: round; }
+.desenho .miolo { fill: none; stroke: #fff; stroke-width: 32; stroke-linecap: round; stroke-linejoin: round; }
+.desenho .contorno.fino { stroke-width: 24; }
+.desenho .miolo.fino { stroke-width: 12; }
+.eng.vermelha { fill: var(--vermelho); }
+.eng.buraco { fill: #d4d4d0; stroke-dasharray: 10 8; stroke-width: 4; }
+
+/* engrenagens giram só no slide em foco */
+.gira { transform-box: fill-box; transform-origin: center; animation: girar var(--v, 20s) linear infinite; animation-play-state: paused; }
+.gira.anti { animation-direction: reverse; }
+.cartao.ativo .gira { animation-play-state: running; }
+@keyframes girar { to { rotate: 360deg; } }
+
+.braco-robo { transform-box: view-box; transform-origin: 180px 470px; animation: escrever 2.4s ease-in-out infinite alternate; animation-play-state: paused; }
+.cartao.ativo .braco-robo { animation-play-state: running; }
+@keyframes escrever { from { rotate: -1.5deg; } to { rotate: 2deg; } }
+
+/* Engrenagem com letra ou número (CSD e Perfil) */
+.eng-letra { width: 78px; height: 78px; flex: none; overflow: visible; }
+.eng-letra .eng { stroke-width: 4; }
+.eng-letra text {
+  font-family: var(--serifa); font-size: 52px; text-anchor: middle; dominant-baseline: central;
+  fill: var(--tinta); pointer-events: none;
+}
+.eng-letra text.num { font-size: 36px; }
+.eng-letra .eng.vermelha + text { fill: #fff; }
+
+/* Engrenagem decorativa saindo pelo canto */
+.eng-canto { position: absolute; right: -70px; top: -70px; width: 260px; height: 260px; opacity: .9; }
+
+/* Porca sextavada com número */
+.porca {
+  flex: none;
+  width: 46px; height: 46px;
+  display: grid; place-items: center;
+  font-family: var(--serifa); font-size: 20px; line-height: 1;
+  color: #fff;
+  background: var(--tinta);
+  clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%);
+  position: relative;
+}
+
 /* Sumário */
-.c-sumario { display: grid; grid-template-columns: 1fr 40%; padding: 0; }
-.c-sumario .texto { padding: 52px 60px; display: flex; flex-direction: column; }
-.c-sumario h2 { font-size: 92px; }
-.c-sumario ol { list-style: none; margin-top: auto; border-top: 1px solid var(--fraco); }
-.c-sumario li {
-  display: flex; align-items: baseline; gap: 22px;
-  font-family: var(--serifa); text-transform: uppercase; font-size: 30px;
-  padding: 11px 0;
+.sumario { list-style: none; margin-top: 30px; border-top: 2px solid var(--tinta); }
+.sumario li {
+  display: flex; align-items: center; gap: 20px;
+  font-family: var(--serifa); text-transform: uppercase; font-size: 28px;
+  padding: 8px 0;
   border-bottom: 1px solid var(--fraco);
   cursor: pointer;
   transition: color .2s, padding .3s var(--curva);
 }
-.c-sumario li span { font-family: var(--grotesca); font-size: 14px; color: var(--apagado); }
-.c-sumario li:hover { color: var(--vermelho); padding-left: 10px; }
+.sumario .porca { width: 38px; height: 38px; font-family: var(--grotesca); font-size: 13px; font-weight: 600; }
+.sumario li:hover { color: var(--vermelho); padding-left: 10px; }
+.sumario li:hover .porca { background: var(--vermelho); }
 
 /* Três colunas (CSD e Perfil) */
-.colunas3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 44px; margin-top: 22px; }
-.colunas3 section { border-top: 1px solid var(--tinta); padding-top: 18px; }
+.colunas3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 44px; margin-top: 18px; }
+.colunas3 section { border-top: 2px solid var(--tinta); padding-top: 18px; }
 .colunas3 h3 {
   font-family: var(--serifa); font-weight: normal; text-transform: uppercase;
   font-size: 28px; line-height: 1;
-  display: flex; align-items: flex-end; gap: 14px;
+  display: flex; align-items: center; gap: 16px;
   margin-bottom: 20px;
 }
-.colunas3 h3 em { font-style: normal; color: var(--vermelho); font-size: 76px; line-height: .75; }
 .colunas3 ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-.colunas3 li { font-size: 16.5px; line-height: 1.4; padding-left: 18px; position: relative; }
-.colunas3 li::before { content: "—"; position: absolute; left: 0; color: var(--apagado); }
+.colunas3 li { font-size: 16.5px; line-height: 1.4; padding-left: 20px; position: relative; }
+.colunas3 li::before {
+  content: ""; position: absolute; left: 0; top: .55em;
+  width: 8px; height: 8px; border: 2px solid var(--tinta); border-radius: 50%;
+}
 
 /* Lista de problemas */
-.problemas { list-style: none; margin-top: 26px; border-top: 1px solid var(--fraco); }
+.problemas { list-style: none; margin-top: 26px; border-top: 2px solid var(--tinta); }
 .problemas li {
-  display: grid; grid-template-columns: 54px 380px 1fr; align-items: baseline;
-  padding: 16px 18px; border-bottom: 1px solid var(--fraco);
+  display: grid; grid-template-columns: 68px 380px 1fr; align-items: center;
+  padding: 12px 18px; border-bottom: 1px solid var(--fraco);
 }
-.problemas span { font-family: var(--serifa); font-size: 30px; color: var(--vermelho); line-height: 1; }
 .problemas b { font-weight: 600; font-size: 19px; }
 .problemas p { font-size: 17px; color: var(--apagado); }
-.problemas .escolhido { background: var(--tinta); color: #fff; border: 0; }
+.problemas .porca { width: 42px; height: 42px; }
+.problemas .escolhido {
+  background: var(--tinta); color: #fff; border: 0;
+  box-shadow: inset 12px 0 0 var(--vermelho);
+}
 .problemas .escolhido p { color: rgba(255, 255, 255, .72); }
+.problemas .escolhido .porca { background: var(--vermelho); }
 .problemas i {
   display: inline-block; margin-left: 10px;
   font-style: normal; font-weight: 500; font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
   color: var(--vermelho); border: 1px solid var(--vermelho); padding: 2px 7px; vertical-align: 3px;
 }
 
-/* Números grandes */
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; margin-top: 30px; }
-.stats > div { border-top: 1px solid var(--tinta); padding-top: 16px; display: flex; flex-direction: column; gap: 8px; }
-.stats strong { font-family: var(--serifa); font-weight: normal; font-size: 104px; line-height: .9; color: var(--vermelho); letter-spacing: -.02em; }
-.stats p { font-size: 17px; line-height: 1.4; }
-.stats cite { font-size: 13px; color: var(--apagado); font-style: normal; }
-.rodape { font-size: 16.5px; margin-top: 30px; padding-top: 16px; border-top: 1px solid var(--fraco); color: var(--apagado); }
+/* Números grandes com medidor */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; margin-top: 26px; }
+.stats > div {
+  border-top: 2px solid var(--tinta); padding-top: 14px;
+  display: grid; grid-template-columns: 150px 1fr; grid-template-rows: auto auto 1fr; column-gap: 18px; row-gap: 6px;
+  align-items: end;
+}
+.medidor { grid-row: 1; grid-column: 1; width: 150px; overflow: visible; }
+.stats strong { grid-row: 1; grid-column: 2; font-family: var(--serifa); font-weight: normal; font-size: 76px; line-height: .85; color: var(--vermelho); letter-spacing: -.02em; }
+.stats p { grid-column: 1 / -1; font-size: 17px; line-height: 1.4; margin-top: 8px; }
+.stats cite { grid-column: 1 / -1; font-size: 13px; color: var(--apagado); font-style: normal; }
+.medidor .trilho { fill: none; stroke: #d9d9d5; stroke-width: 16; }
+.medidor .valor { fill: none; stroke: var(--vermelho); stroke-width: 16; }
+.medidor .vazio { fill: none; stroke: var(--tinta); stroke-width: 2; stroke-dasharray: 6 6; }
+.medidor .risco { stroke: var(--tinta); stroke-width: 2.5; }
+.medidor .risco.maior { stroke-width: 4; }
+.medidor .ponteiro { stroke: var(--tinta); stroke-width: 6; stroke-linecap: round; }
+.medidor .eixo { fill: #fff; stroke: var(--tinta); stroke-width: 5; }
+.medidor .eixo-miolo { fill: var(--tinta); }
+.rodape { font-size: 16.5px; margin-top: 26px; padding-top: 14px; border-top: 1px solid var(--fraco); color: var(--apagado); }
 .rodape b { color: var(--tinta); }
 
 /* Grade de duas colunas (Roteiro e Entrevistados) */
@@ -295,7 +417,7 @@ body.visao-geral .cartao:hover { outline: 3px solid var(--vermelho); }
   list-style: none;
   display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: column;
   column-gap: 48px; margin-top: 22px;
-  border-top: 1px solid var(--fraco);
+  border-top: 2px solid var(--tinta);
 }
 .perguntas { grid-template-rows: repeat(4, 1fr); height: 430px; }
 .entrevistados { grid-template-rows: repeat(5, 1fr); height: 440px; }
@@ -304,15 +426,20 @@ body.visao-geral .cartao:hover { outline: 3px solid var(--vermelho); }
   border-bottom: 1px solid var(--fraco);
   font-size: 18.5px; line-height: 1.35;
 }
-.grade2 span { flex: none; width: 34px; font-family: var(--serifa); font-size: 30px; color: var(--vermelho); }
+.entrevistados .porca { width: 40px; height: 40px; font-size: 17px; }
 .entrevistados b { display: block; font-weight: 600; font-size: 18.5px; }
 .entrevistados small { font-size: 14px; color: var(--apagado); font-style: italic; }
 
-.caixa { margin-top: 30px; background: var(--fundo); padding: 22px 28px; }
+.caixa {
+  margin-top: 26px; padding: 22px 28px;
+  background: var(--fundo);
+  border: 2px solid var(--tinta);
+  box-shadow: 6px 6px 0 var(--tinta);
+}
 .caixa h3 { font-family: var(--serifa); font-weight: normal; text-transform: uppercase; font-size: 22px; margin-bottom: 8px; }
 .caixa ol { padding-left: 24px; font-size: 16.5px; color: var(--apagado); line-height: 1.7; }
 
-.refs { columns: 2; column-gap: 48px; margin-top: 24px; }
+.refs { columns: 2; column-gap: 48px; margin-top: 24px; position: relative; }
 .refs p { font-size: 13.5px; line-height: 1.42; margin-bottom: 11px; break-inside: avoid; overflow-wrap: anywhere; }
 
 /* ---------- Lista da direita ---------- */
@@ -361,7 +488,7 @@ body.tela-cheia #esquerda, body.tela-cheia #lista, body.tela-cheia #cores, body.
 #hud .texto-btn { text-decoration: underline; text-underline-offset: 3px; }
 #hud .texto-btn i { font-style: normal; color: var(--apagado); font-size: 11px; margin-left: 2px; }
 #contador { font-variant-numeric: tabular-nums; min-width: 46px; text-align: center; }
-body.modo-parede #hud, body.modo-empurrando #hud, body.modo-hero #btn-overview { opacity: 0; pointer-events: none; }
+body.modo-parede #hud, body.modo-empurrando #hud, body.modo-hero #btn-blocos, body.modo-hero #btn-lista { opacity: 0; pointer-events: none; }
 body.ocioso #hud { opacity: 0; }
 :focus-visible { outline: 2px solid var(--vermelho); outline-offset: 2px; }
 
@@ -376,3 +503,12 @@ body.ocioso #hud { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   #parede, #hero, #palco { transition-duration: .01s; }
 }
+
+/* Medidores: o ponteiro e o arco sobem quando o slide entra em foco */
+.medidor .ponteiro { transform-box: view-box; transform-origin: 110px 112px; rotate: 0deg; transition: rotate 1.4s cubic-bezier(.3, 1.4, .5, 1) .2s; }
+.cartao.ativo .medidor .ponteiro { rotate: var(--ang); }
+.medidor .valor { stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke-dashoffset 1.4s cubic-bezier(.3, 1, .5, 1) .2s; }
+.cartao.ativo .medidor .valor { stroke-dashoffset: calc(100 - var(--v)); }
+
+/* Na visão em lista, a dica sobe para perto dos controles (não fica embaixo do número grande) */
+body.visao-lista .dica-scroll { left: auto; right: 26px; bottom: 50px; color: var(--tinta); }

@@ -20,28 +20,29 @@
       </pattern>
     </defs>
 
-    <g class="perna perna-tras">
-      <path class="contorno" d="M160 255 L112 318 L72 378"/>
-      <path class="miolo cinza" d="M160 255 L112 318 L72 378"/>
-      <path class="peca" d="M48 370 h48 a12 12 0 0 1 12 12 v8 h-70 v-6 a14 14 0 0 1 10-14z"/>
+    <!-- pernas e braços são posicionados quadro a quadro pelo app.js (ciclo de caminhada) -->
+    <g class="perna" id="perna-tras">
+      <path class="contorno"/><path class="miolo cinza"/>
+      <path class="peca pe" d="M-18 -9 H26 a15 15 0 0 1 15 15 V12 H-18 Z"/>
     </g>
 
-    <g class="corpo">
-      <g class="braco-tras">
-        <path class="contorno" d="M224 150 L266 160 L304 146"/>
-        <path class="miolo cinza" d="M224 150 L266 160 L304 146"/>
-        <rect class="peca" x="300" y="126" width="22" height="40" rx="8"/>
+    <g id="corpo">
+      <g class="braco" id="braco-tras">
+        <path class="contorno"/><path class="miolo cinza"/>
       </g>
+      <rect class="peca" x="300" y="126" width="22" height="40" rx="8"/>
 
-      <g transform="rotate(14 170 255)">
+      <g id="tronco" transform="rotate(14 170 255)">
         <rect class="peca" x="132" y="238" width="76" height="28" rx="10"/>
         <rect class="peca" x="122" y="126" width="104" height="122" rx="22" fill="url(#pontos)"/>
         <rect class="peca" x="140" y="148" width="60" height="46" rx="8"/>
         <circle class="luz" cx="158" cy="171" r="8"/>
         <path class="traco" d="M176 162 h14 M176 171 h14 M176 180 h14"/>
         <rect class="peca" x="160" y="110" width="28" height="22"/>
-        <line class="traco" x1="168" y1="40" x2="160" y2="14"/>
-        <circle class="luz" cx="159" cy="11" r="8"/>
+        <g id="antena">
+          <line class="traco" x1="168" y1="40" x2="160" y2="14"/>
+          <circle class="luz" cx="159" cy="11" r="8"/>
+        </g>
         <rect class="peca" x="136" y="38" width="96" height="78" rx="20"/>
         <circle class="peca" cx="150" cy="78" r="10" fill="url(#pontos)"/>
         <rect x="184" y="55" width="44" height="36" rx="9" fill="#1e1e1e"/>
@@ -49,19 +50,17 @@
         <path class="traco" d="M196 100 q12 6 24 0"/>
       </g>
 
-      <g class="braco-frente">
-        <path class="contorno" d="M236 166 L280 180 L310 168"/>
-        <path class="miolo" d="M236 166 L280 180 L310 168"/>
-        <rect class="peca" x="304" y="146" width="22" height="42" rx="8"/>
+      <g class="braco" id="braco-frente">
+        <path class="contorno"/><path class="miolo"/>
       </g>
+      <rect class="peca" x="304" y="146" width="22" height="42" rx="8"/>
 
       <path class="esforco" d="M112 44 l-16 -10 M106 64 l-20 -2 M120 26 l-8 -14"/>
     </g>
 
-    <g class="perna perna-frente">
-      <path class="contorno" d="M182 255 L214 314 L192 376"/>
-      <path class="miolo" d="M182 255 L214 314 L192 376"/>
-      <path class="peca" d="M176 368 h48 a12 12 0 0 1 12 12 v10 h-68 v-8 a14 14 0 0 1 8-14z"/>
+    <g class="perna" id="perna-frente">
+      <path class="contorno"/><path class="miolo"/>
+      <path class="peca pe" d="M-18 -9 H26 a15 15 0 0 1 15 15 V12 H-18 Z"/>
     </g>
   </svg>
 
@@ -103,36 +102,69 @@
 
   <div id="pilha">
     <div id="tela" aria-hidden="true"></div>
+    <!-- Engrenagens: <path data-eng="dentes,raio externo,raio interno,furo"> é desenhada pelo app.js -->
 
     <!-- 02 · Sumário -->
     <article class="cartao" data-secao="Introdução" data-categoria="Visão geral" data-titulo="Sumário"
       data-desc="O caminho da apresentação, da introdução à conclusão."
-      data-detalhes="Tema|IA nos estudos;Seções|6" data-cores="#1e1e1e,#ff4a4a,#7cc6dd">
-      <div class="conteudo c-sumario">
+      data-detalhes="Tema|IA nos estudos;Seções|6" data-cores="#1e1e1e,#ff4a4a,#bdbdbd">
+      <div class="conteudo c-ilustra-dir">
         <div class="texto">
-          <p class="c-rotulo">Visão geral</p>
+          <p class="c-rotulo">Painel 00 — Visão geral</p>
           <h2>Sumário</h2>
-          <ol>
-            <li data-goto="3"><span>01</span>Introdução</li>
-            <li data-goto="4"><span>02</span>CSD’s</li>
-            <li data-goto="5"><span>03</span>Lista de problemas</li>
-            <li data-goto="7"><span>04</span>Público-alvo</li>
-            <li data-goto="9"><span>05</span>Entrevista</li>
-            <li data-goto="13"><span>06</span>Conclusão</li>
+          <ol class="sumario">
+            <li data-goto="3"><span class="porca">01</span>Introdução</li>
+            <li data-goto="4"><span class="porca">02</span>CSD’s</li>
+            <li data-goto="5"><span class="porca">03</span>Lista de problemas</li>
+            <li data-goto="7"><span class="porca">04</span>Público-alvo</li>
+            <li data-goto="9"><span class="porca">05</span>Entrevista</li>
+            <li data-goto="13"><span class="porca">06</span>Conclusão</li>
           </ol>
         </div>
-        <div class="foto" style="background-image:url(assets/img/robo-mao.jpg)"></div>
+        <div class="ilustra">
+          <svg class="desenho" viewBox="0 0 600 620" aria-hidden="true">
+            <g transform="translate(140 170)"><path class="eng gira" data-eng="14,112,94,28" style="--v:32s"/></g>
+            <g transform="translate(470 420)"><path class="eng gira anti vermelha" data-eng="10,82,66,20" style="--v:22.8s"/></g>
+            <path class="peca" d="M140 560 Q300 470 460 560 L480 620 H120 Z" fill="url(#pontos)"/>
+            <rect class="peca" x="255" y="430" width="90" height="70"/>
+            <line class="traco grosso" x1="300" y1="200" x2="300" y2="140"/>
+            <circle class="luz" cx="300" cy="128" r="18"/>
+            <circle class="peca" cx="150" cy="320" r="28" fill="url(#pontos)"/>
+            <circle class="peca" cx="450" cy="320" r="28" fill="url(#pontos)"/>
+            <rect class="peca" x="150" y="200" width="300" height="240" rx="50"/>
+            <rect x="190" y="252" width="220" height="112" rx="28" fill="#1e1e1e"/>
+            <rect class="olho" x="238" y="296" width="44" height="16" rx="8"/>
+            <rect class="olho" x="318" y="296" width="44" height="16" rx="8"/>
+            <path class="traco" d="M240 394 h120 M240 412 h120"/>
+            <circle class="rebite" cx="178" cy="228" r="7"/><circle class="rebite" cx="422" cy="228" r="7"/>
+            <circle class="rebite" cx="178" cy="412" r="7"/><circle class="rebite" cx="422" cy="412" r="7"/>
+          </svg>
+        </div>
       </div>
     </article>
 
     <!-- 03 · Introdução -->
     <article class="cartao" data-secao="Introdução" data-categoria="01 — Introdução" data-titulo="Introdução"
       data-desc="Por que o uso exagerado da IA preocupa: a perda de capacidades cognitivas."
-      data-detalhes="Seção|01 Introdução;Foco|Capacidades cognitivas" data-cores="#7cc6dd,#cfe9f2,#1e1e1e">
-      <div class="conteudo c-foto-esq">
-        <div class="foto" style="background-image:url(assets/img/robo-mao.jpg)"></div>
+      data-detalhes="Seção|01 Introdução;Foco|Capacidades cognitivas" data-cores="#ff4a4a,#1e1e1e,#e6e6e6">
+      <div class="conteudo c-ilustra-esq">
+        <div class="ilustra">
+          <svg class="desenho" viewBox="0 0 600 620" aria-hidden="true">
+            <path class="peca grossa" d="M170 560 L170 470 C115 440 92 385 92 320 C92 200 185 112 300 112 C415 112 490 195 490 300 C490 330 485 350 478 366 L512 412 C518 422 512 432 500 434 L478 436 L480 476 C480 498 462 510 440 508 L392 500 L390 560"/>
+            <g transform="translate(262 292)"><path class="eng gira" data-eng="12,80,65,18" fill="url(#pontos)" style="--v:24s"/></g>
+            <g transform="translate(378 230)"><path class="eng gira anti vermelha" data-eng="9,54,43,13" style="--v:18s"/></g>
+            <g transform="translate(352 376)"><path class="eng gira anti" data-eng="8,46,36,11" style="--v:16s"/></g>
+            <g class="bateria" transform="translate(470 96)">
+              <rect class="peca" width="96" height="44" rx="8"/>
+              <rect class="peca" x="96" y="13" width="10" height="18" rx="3"/>
+              <rect x="10" y="10" width="20" height="24" rx="3" fill="#ff4a4a"/>
+              <path class="traco fino" d="M40 10 v24 M64 10 v24" stroke-dasharray="4 5"/>
+            </g>
+            <path class="traco" d="M520 172 l10 16 M548 168 l-4 18"/>
+          </svg>
+        </div>
         <div class="texto">
-          <p class="c-rotulo">01 — Introdução</p>
+          <p class="c-rotulo">Painel 01 — Introdução</p>
           <h2>Introdução</h2>
           <p class="grande">Escolhemos o tema referente ao uso recorrente da inteligência artificial, que está fazendo os usuários diminuírem suas capacidades cognitivas em decorrência do uso exagerado da própria IA.</p>
         </div>
@@ -142,12 +174,12 @@
     <!-- 04 · CSD's -->
     <article class="cartao" data-secao="CSD’s" data-categoria="02 — Matriz CSD" data-titulo="CSD’s"
       data-desc="Certezas, suposições e dúvidas que guiaram a pesquisa."
-      data-detalhes="Seção|02 CSD’s;Ferramenta|Matriz CSD" data-cores="#ff4a4a,#1e1e1e,#d9d9d9">
-      <div class="conteudo c-colunas">
-        <p class="c-rotulo">02 — Certezas, suposições e dúvidas</p>
+      data-detalhes="Seção|02 CSD’s;Ferramenta|Matriz CSD" data-cores="#ff4a4a,#1e1e1e,#bdbdbd">
+      <div class="conteudo">
+        <p class="c-rotulo">Painel 02 — Certezas, suposições e dúvidas</p>
         <div class="colunas3">
           <section>
-            <h3><em>C</em>Certezas</h3>
+            <h3><svg class="eng-letra" viewBox="-60 -60 120 120"><path class="eng gira" data-eng="10,56,46,0" style="--v:20s"/><text>C</text></svg>Certezas</h3>
             <ul>
               <li>A IA pode ser utilizada como ferramenta de apoio aos estudos.</li>
               <li>Os estudantes podem recorrer à IA para esclarecer dúvidas e auxiliar na realização de trabalhos.</li>
@@ -156,7 +188,7 @@
             </ul>
           </section>
           <section>
-            <h3><em>S</em>Suposições</h3>
+            <h3><svg class="eng-letra" viewBox="-60 -60 120 120"><path class="eng gira anti" data-eng="10,56,46,0" style="--v:20s"/><text>S</text></svg>Suposições</h3>
             <ul>
               <li>O uso excessivo da IA pode aumentar a dependência dos estudantes dessa ferramenta.</li>
               <li>Alguns estudantes podem ter mais dificuldade para realizar atividades sem auxílio da IA.</li>
@@ -165,7 +197,7 @@
             </ul>
           </section>
           <section>
-            <h3><em>D</em>Dúvidas</h3>
+            <h3><svg class="eng-letra" viewBox="-60 -60 120 120"><path class="eng gira vermelha" data-eng="10,56,46,0" style="--v:20s"/><text>D</text></svg>Dúvidas</h3>
             <ul>
               <li>O uso contínuo da IA pode prejudicar o raciocínio e a criatividade?</li>
               <li>Os estudantes conseguem realizar atividades sem utilizar IA?</li>
@@ -183,14 +215,14 @@
       data-desc="Cinco problemas do dia a dia levantados pelo grupo."
       data-detalhes="Seção|03 Problemas;Levantados|5;Escolhido|Uso da IA nos estudos" data-cores="#1e1e1e,#ff4a4a,#ebebeb">
       <div class="conteudo">
-        <p class="c-rotulo">03 — Levantamento</p>
+        <p class="c-rotulo">Painel 03 — Levantamento</p>
         <h2 class="medio">Lista de problemas levantados</h2>
         <ol class="problemas">
-          <li><span>1</span><b>Organização financeira</b><p>Dificuldade em controlar gastos e organizar o dinheiro no mês.</p></li>
-          <li><span>2</span><b>Descarte incorreto de lixo na cidade</b><p>Falta de informação sobre onde descartar cada tipo de resíduo.</p></li>
-          <li><span>3</span><b>Desperdício de alimentos por vencimento</b><p>Falta de controle sobre a validade dos alimentos e os produtos disponíveis em casa.</p></li>
-          <li><span>4</span><b>Fila de atendimento de vendas</b><p>Demora no atendimento em estabelecimentos devido à falta de organização.</p></li>
-          <li class="escolhido"><span>5</span><b>Uso da IA nos estudos <i>escolhido</i></b><p>Os estudantes podem acabar dependendo muito da IA para realizar atividades e ter dificuldades para pensar por conta própria.</p></li>
+          <li><span class="porca">1</span><b>Organização financeira</b><p>Dificuldade em controlar gastos e organizar o dinheiro no mês.</p></li>
+          <li><span class="porca">2</span><b>Descarte incorreto de lixo na cidade</b><p>Falta de informação sobre onde descartar cada tipo de resíduo.</p></li>
+          <li><span class="porca">3</span><b>Desperdício de alimentos por vencimento</b><p>Falta de controle sobre a validade dos alimentos e os produtos disponíveis em casa.</p></li>
+          <li><span class="porca">4</span><b>Fila de atendimento de vendas</b><p>Demora no atendimento em estabelecimentos devido à falta de organização.</p></li>
+          <li class="escolhido"><span class="porca">5</span><b>Uso da IA nos estudos <i>escolhido</i></b><p>Os estudantes podem acabar dependendo muito da IA para realizar atividades e ter dificuldades para pensar por conta própria.</p></li>
         </ol>
       </div>
     </article>
@@ -200,13 +232,13 @@
       data-desc="Pesquisas recentes confirmam o que víamos na rotina."
       data-detalhes="Seção|03 Problemas;Fontes|Cetic.br · OCDE · Gerlich" data-cores="#ff4a4a,#ffb3b3,#1e1e1e">
       <div class="conteudo">
-        <p class="c-rotulo">03 — Justificativa</p>
+        <p class="c-rotulo">Painel 03 — Justificativa</p>
         <h2 class="medio">Por que escolhemos o problema 5</h2>
         <p class="lead">Dos cinco problemas que levantamos, a dependência da IA nos estudos foi o que mais apareceu na nossa rotina. E pesquisas recentes mostram que não é só impressão nossa:</p>
         <div class="stats">
-          <div><strong>70%</strong><p>dos alunos do ensino médio que usam internet recorrem à IA generativa em pesquisas escolares</p><cite>TIC Educação 2024 (Cetic.br, 2025)</cite></div>
-          <div><strong>32%</strong><p>dos alunos receberam alguma orientação da escola sobre como usar essas ferramentas</p><cite>TIC Educação 2024 (Cetic.br, 2025)</cite></div>
-          <div><strong>48%</strong><p>dos estudantes brasileiros de 15 anos usam IA toda semana para aprender</p><cite>PISA 2025 (OCDE, 2026)</cite></div>
+          <div><svg class="medidor" viewBox="0 0 220 128" data-valor="70" aria-hidden="true"></svg><strong>70%</strong><p>dos alunos do ensino médio que usam internet recorrem à IA generativa em pesquisas escolares</p><cite>TIC Educação 2024 (Cetic.br, 2025)</cite></div>
+          <div><svg class="medidor" viewBox="0 0 220 128" data-valor="32" aria-hidden="true"></svg><strong>32%</strong><p>dos alunos receberam alguma orientação da escola sobre como usar essas ferramentas</p><cite>TIC Educação 2024 (Cetic.br, 2025)</cite></div>
+          <div><svg class="medidor" viewBox="0 0 220 128" data-valor="48" aria-hidden="true"></svg><strong>48%</strong><p>dos estudantes brasileiros de 15 anos usam IA toda semana para aprender</p><cite>PISA 2025 (OCDE, 2026)</cite></div>
         </div>
         <p class="rodape"><b>Gerlich (2025)</b> ouviu 666 pessoas e encontrou relação entre o uso frequente de IA e notas mais baixas em pensamento crítico, com resultado pior justamente na faixa de 17 a 25 anos, a idade de quem está estudando.</p>
       </div>
@@ -215,26 +247,50 @@
     <!-- 07 · Público-alvo -->
     <article class="cartao" data-secao="Público-alvo" data-categoria="04 — Público" data-titulo="Público-alvo"
       data-desc="Estudantes que usam ou já usaram IA para estudar."
-      data-detalhes="Seção|04 Público-alvo;Quem|Ensino médio e superior" data-cores="#5fb8d3,#e8f6fa,#1e1e1e">
-      <div class="conteudo c-foto-dir">
+      data-detalhes="Seção|04 Público-alvo;Quem|Ensino médio e superior" data-cores="#1e1e1e,#ff4a4a,#bdbdbd">
+      <div class="conteudo c-ilustra-dir">
         <div class="texto">
-          <p class="c-rotulo">04 — Público</p>
+          <p class="c-rotulo">Painel 04 — Público</p>
           <h2>Público-alvo</h2>
           <p class="grande">Estudantes do ensino médio ou do ensino superior que utilizam ou já utilizaram ferramentas de Inteligência Artificial para estudar, pesquisar ou realizar trabalhos acadêmicos.</p>
         </div>
-        <div class="foto" style="background-image:url(assets/img/maos.jpg)"></div>
+        <div class="ilustra">
+          <svg class="desenho" viewBox="0 0 600 620" aria-hidden="true">
+            <g transform="rotate(-4 470 540)">
+              <rect class="peca" x="330" y="488" width="250" height="104" rx="4"/>
+              <path class="traco fino" d="M352 516 h150 M352 538 h196 M352 560 h120"/>
+              <path class="traco vermelho" d="M480 558 q14 -18 26 0 t26 0"/>
+            </g>
+            <g class="braco-robo">
+              <path class="peca" d="M70 600 V560 Q70 530 100 530 H260 Q290 530 290 560 V600 Z" fill="url(#pontos)"/>
+              <path class="peca" d="M118 532 Q180 440 242 532 Z"/>
+              <path class="contorno" d="M180 470 L300 290 L452 352"/>
+              <path class="miolo" d="M180 470 L300 290 L452 352"/>
+              <circle class="peca" cx="180" cy="470" r="34" fill="url(#pontos)"/><circle class="rebite" cx="180" cy="470" r="9"/>
+              <circle class="peca" cx="300" cy="290" r="30"/><circle class="rebite" cx="300" cy="290" r="8"/>
+              <path class="contorno fino" d="M452 352 L500 322 L522 344 M452 352 L498 398 L524 380"/>
+              <path class="miolo fino" d="M452 352 L500 322 L522 344 M452 352 L498 398 L524 380"/>
+              <circle class="peca" cx="452" cy="352" r="22"/><circle class="rebite" cx="452" cy="352" r="6"/>
+              <g transform="rotate(22 522 400)">
+                <rect class="peca" x="510" y="318" width="26" height="140" fill="#ff4a4a"/>
+                <path class="peca" d="M510 458 H536 L523 490 Z"/>
+                <rect class="peca" x="510" y="300" width="26" height="20"/>
+              </g>
+            </g>
+          </svg>
+        </div>
       </div>
     </article>
 
     <!-- 08 · Perfil do público-alvo -->
     <article class="cartao" data-secao="Público-alvo" data-categoria="04 — Perfil" data-titulo="Perfil do público"
       data-desc="Quem são, quais critérios usamos e por que eles."
-      data-detalhes="Seção|04 Público-alvo;Idade|15 a 25 anos;Região|Joinville" data-cores="#1e1e1e,#5fb8d3,#ff4a4a">
-      <div class="conteudo c-colunas">
-        <p class="c-rotulo">04 — Perfil do público-alvo</p>
+      data-detalhes="Seção|04 Público-alvo;Idade|15 a 25 anos;Região|Joinville" data-cores="#1e1e1e,#bdbdbd,#ff4a4a">
+      <div class="conteudo">
+        <p class="c-rotulo">Painel 04 — Perfil do público-alvo</p>
         <div class="colunas3">
           <section>
-            <h3><em>01</em>Quem são</h3>
+            <h3><svg class="eng-letra" viewBox="-60 -60 120 120"><path class="eng gira" data-eng="10,56,46,0" style="--v:20s"/><text class="num">01</text></svg>Quem são</h3>
             <ul>
               <li>Alunos do ensino médio e da graduação, em geral entre 15 e 25 anos.</li>
               <li>Pessoas que estudam usando celular ou computador com internet no dia a dia.</li>
@@ -243,7 +299,7 @@
             </ul>
           </section>
           <section>
-            <h3><em>02</em>Critérios</h3>
+            <h3><svg class="eng-letra" viewBox="-60 -60 120 120"><path class="eng gira anti" data-eng="10,56,46,0" style="--v:20s"/><text class="num">02</text></svg>Critérios</h3>
             <ul>
               <li>Usar ou já ter usado alguma IA (ChatGPT, Gemini, Copilot…) para estudar.</li>
               <li>Estar matriculado em alguma instituição de ensino.</li>
@@ -252,7 +308,7 @@
             </ul>
           </section>
           <section>
-            <h3><em>03</em>Por que eles</h3>
+            <h3><svg class="eng-letra" viewBox="-60 -60 120 120"><path class="eng gira vermelha" data-eng="10,56,46,0" style="--v:20s"/><text class="num">03</text></svg>Por que eles</h3>
             <ul>
               <li>É a faixa que mais usa IA nos estudos.</li>
               <li>Estão formando agora os hábitos de estudo que vão levar para o trabalho.</li>
@@ -266,11 +322,22 @@
     <!-- 09 · Objetivo da entrevista -->
     <article class="cartao" data-secao="Entrevista" data-categoria="05 — Entrevista" data-titulo="Objetivo"
       data-desc="Entender como os estudantes usam a IA e o que ela muda no aprendizado."
-      data-detalhes="Seção|05 Entrevista;Investiga|Raciocínio · criatividade · autonomia" data-cores="#0a1a2f,#3fa9f5,#ffd23f">
-      <div class="conteudo c-foto-esq">
-        <div class="foto" style="background-image:url(assets/img/binario.jpg)"></div>
+      data-detalhes="Seção|05 Entrevista;Investiga|Raciocínio · criatividade · autonomia" data-cores="#ff4a4a,#1e1e1e,#e6e6e6">
+      <div class="conteudo c-ilustra-esq">
+        <div class="ilustra">
+          <svg class="desenho" viewBox="0 0 600 620" aria-hidden="true">
+            <g transform="translate(250 330)"><path class="eng gira" data-eng="12,92,76,22" fill="url(#pontos)" style="--v:28s"/></g>
+            <g transform="translate(380 262)"><path class="eng gira anti" data-eng="9,54,43,14" style="--v:21s"/></g>
+            <g transform="translate(345 428)"><path class="eng gira anti vermelha" data-eng="8,46,36,12" style="--v:18.7s"/></g>
+            <circle cx="330" cy="300" r="126" fill="rgba(255,255,255,.55)" stroke="#1e1e1e" stroke-width="16"/>
+            <path d="M262 214 A100 100 0 0 1 362 196" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+            <path class="contorno" d="M424 394 L536 506"/>
+            <path d="M424 394 L536 506" fill="none" stroke="#ff4a4a" stroke-width="22" stroke-linecap="round"/>
+            <circle class="rebite" cx="424" cy="394" r="9"/>
+          </svg>
+        </div>
         <div class="texto">
-          <p class="c-rotulo">05 — Entrevista</p>
+          <p class="c-rotulo">Painel 05 — Entrevista</p>
           <h2>Objetivo<br><small>da entrevista</small></h2>
           <p class="grande">Compreender como os estudantes utilizam a Inteligência Artificial nas atividades acadêmicas e investigar suas percepções sobre os impactos dessa tecnologia no raciocínio, na criatividade, na autonomia e na aprendizagem.</p>
         </div>
@@ -282,18 +349,18 @@
       data-desc="Oito perguntas abertas, feitas individualmente."
       data-detalhes="Seção|05 Entrevista;Perguntas|8 abertas;Formato|Individual" data-cores="#1e1e1e,#ebebeb,#ff4a4a">
       <div class="conteudo">
-        <p class="c-rotulo">05 — Roteiro</p>
+        <p class="c-rotulo">Painel 05 — Roteiro</p>
         <h2 class="medio">Roteiro da entrevista</h2>
         <p class="nota">Perguntas abertas, feitas individualmente com cada participante.</p>
         <ol class="grade2 perguntas">
-          <li><span>1</span>Com que frequência você usa IA para estudar ou fazer trabalhos?</li>
-          <li><span>2</span>Para que você mais usa: tirar dúvidas, resumir, escrever, resolver exercícios?</li>
-          <li><span>3</span>Você costuma conferir se a resposta da IA está certa? Como faz isso?</li>
-          <li><span>4</span>Já entregou alguma atividade feita quase toda pela IA? Por quê?</li>
-          <li><span>5</span>Hoje, você sente mais dificuldade para começar uma tarefa sem a IA?</li>
-          <li><span>6</span>Acha que a IA mudou seu jeito de pensar, de criar ou de lembrar o conteúdo?</li>
-          <li><span>7</span>Sua escola ou faculdade já explicou como usar a IA nos estudos?</li>
-          <li><span>8</span>Como a IA poderia te ajudar a pensar sozinho, em vez de só dar a resposta?</li>
+          <li><span class="porca">1</span>Com que frequência você usa IA para estudar ou fazer trabalhos?</li>
+          <li><span class="porca">2</span>Para que você mais usa: tirar dúvidas, resumir, escrever, resolver exercícios?</li>
+          <li><span class="porca">3</span>Você costuma conferir se a resposta da IA está certa? Como faz isso?</li>
+          <li><span class="porca">4</span>Já entregou alguma atividade feita quase toda pela IA? Por quê?</li>
+          <li><span class="porca">5</span>Hoje, você sente mais dificuldade para começar uma tarefa sem a IA?</li>
+          <li><span class="porca">6</span>Acha que a IA mudou seu jeito de pensar, de criar ou de lembrar o conteúdo?</li>
+          <li><span class="porca">7</span>Sua escola ou faculdade já explicou como usar a IA nos estudos?</li>
+          <li><span class="porca">8</span>Como a IA poderia te ajudar a pensar sozinho, em vez de só dar a resposta?</li>
         </ol>
       </div>
     </article>
@@ -303,20 +370,20 @@
       data-desc="10 estudantes dentro do perfil do público-alvo."
       data-detalhes="Seção|05 Entrevista;Participantes|10" data-cores="#ff4a4a,#1e1e1e,#ebebeb">
       <div class="conteudo">
-        <p class="c-rotulo">05 — Participantes</p>
+        <p class="c-rotulo">Painel 05 — Participantes</p>
         <h2 class="medio">Quem entrevistamos</h2>
         <p class="nota">10 estudantes que usam IA nos estudos, dentro do perfil do público-alvo.</p>
         <ol class="grade2 entrevistados">
-          <li><span>1</span><div><b>Alexandre Klostermann</b><small>Curso / escola · idade</small></div></li>
-          <li><span>2</span><div><b>Entrevistado 2</b><small>Curso / escola · idade</small></div></li>
-          <li><span>3</span><div><b>Entrevistado 3</b><small>Curso / escola · idade</small></div></li>
-          <li><span>4</span><div><b>Entrevistado 4</b><small>Curso / escola · idade</small></div></li>
-          <li><span>5</span><div><b>Entrevistado 5</b><small>Curso / escola · idade</small></div></li>
-          <li><span>6</span><div><b>Entrevistado 6</b><small>Curso / escola · idade</small></div></li>
-          <li><span>7</span><div><b>Entrevistado 7</b><small>Curso / escola · idade</small></div></li>
-          <li><span>8</span><div><b>Entrevistado 8</b><small>Curso / escola · idade</small></div></li>
-          <li><span>9</span><div><b>Entrevistado 9</b><small>Curso / escola · idade</small></div></li>
-          <li><span>10</span><div><b>Entrevistado 10</b><small>Curso / escola · idade</small></div></li>
+          <li><span class="porca">1</span><div><b>Alexandre Klostermann</b><small>Curso / escola · idade</small></div></li>
+          <li><span class="porca">2</span><div><b>Entrevistado 2</b><small>Curso / escola · idade</small></div></li>
+          <li><span class="porca">3</span><div><b>Entrevistado 3</b><small>Curso / escola · idade</small></div></li>
+          <li><span class="porca">4</span><div><b>Entrevistado 4</b><small>Curso / escola · idade</small></div></li>
+          <li><span class="porca">5</span><div><b>Entrevistado 5</b><small>Curso / escola · idade</small></div></li>
+          <li><span class="porca">6</span><div><b>Entrevistado 6</b><small>Curso / escola · idade</small></div></li>
+          <li><span class="porca">7</span><div><b>Entrevistado 7</b><small>Curso / escola · idade</small></div></li>
+          <li><span class="porca">8</span><div><b>Entrevistado 8</b><small>Curso / escola · idade</small></div></li>
+          <li><span class="porca">9</span><div><b>Entrevistado 9</b><small>Curso / escola · idade</small></div></li>
+          <li><span class="porca">10</span><div><b>Entrevistado 10</b><small>Curso / escola · idade</small></div></li>
         </ol>
       </div>
     </article>
@@ -326,13 +393,13 @@
       data-desc="O que os dados da entrevista mostraram."
       data-detalhes="Seção|05 Entrevista;Status|Aguardando aplicação" data-cores="#ff4a4a,#ffd9d9,#1e1e1e">
       <div class="conteudo">
-        <p class="c-rotulo">05 — Resultados</p>
+        <p class="c-rotulo">Painel 05 — Resultados</p>
         <h2 class="medio">Resultados da entrevista</h2>
         <p class="nota">Espaço reservado para os dados da entrevista, que serão incluídos depois da aplicação.</p>
         <div class="stats">
-          <div><strong>10</strong><p>pessoas entrevistadas</p></div>
-          <div><strong>__%</strong><p>usam IA toda semana para estudar</p></div>
-          <div><strong>__%</strong><p>dizem conferir as respostas da IA</p></div>
+          <div><svg class="medidor" viewBox="0 0 220 128" data-valor="100" data-escala="10" aria-hidden="true"></svg><strong>10</strong><p>pessoas entrevistadas</p></div>
+          <div><svg class="medidor" viewBox="0 0 220 128" data-valor="" aria-hidden="true"></svg><strong>__%</strong><p>usam IA toda semana para estudar</p></div>
+          <div><svg class="medidor" viewBox="0 0 220 128" data-valor="" aria-hidden="true"></svg><strong>__%</strong><p>dizem conferir as respostas da IA</p></div>
         </div>
         <div class="caixa">
           <h3>O que mais apareceu nas respostas</h3>
@@ -348,14 +415,30 @@
     <!-- 13 · Conclusão -->
     <article class="cartao" data-secao="Conclusão" data-categoria="06 — Conclusão" data-titulo="Conclusão"
       data-desc="Quando a ferramenta de suporte vira substituta do pensamento."
-      data-detalhes="Seção|06 Conclusão;Conceito|Offloading cognitivo" data-cores="#2b1a6b,#c86bff,#1e1e1e">
-      <div class="conteudo c-foto-dir">
+      data-detalhes="Seção|06 Conclusão;Conceito|Offloading cognitivo" data-cores="#ff4a4a,#1e1e1e,#bdbdbd">
+      <div class="conteudo c-ilustra-dir">
         <div class="texto">
-          <p class="c-rotulo">06 — Conclusão</p>
+          <p class="c-rotulo">Painel 06 — Conclusão</p>
           <h2>Conclusão</h2>
           <p class="citacao">A inteligência artificial atua como um obstáculo à inteligência humana quando promove o descarregamento cognitivo (<i>offloading</i>), transformando uma ferramenta de suporte em uma substituta do pensamento crítico.</p>
         </div>
-        <div class="foto" style="background-image:url(assets/img/conclusao.jpg)"></div>
+        <div class="ilustra">
+          <svg class="desenho" viewBox="0 0 600 620" aria-hidden="true">
+            <g transform="translate(-30 70) scale(.84)">
+              <path class="peca grossa" d="M170 560 L170 470 C115 440 92 385 92 320 C92 200 185 112 300 112 C415 112 490 195 490 300 C490 330 485 350 478 366 L512 412 C518 422 512 432 500 434 L478 436 L480 476 C480 498 462 510 440 508 L392 500 L390 560"/>
+              <g transform="translate(250 300)"><path class="eng buraco" data-eng="11,76,62,0"/></g>
+              <g transform="translate(372 238)"><path class="eng gira anti" data-eng="8,46,36,12" style="--v:14s"/></g>
+            </g>
+            <path class="traco seta" d="M300 250 Q360 150 430 160" stroke-dasharray="10 12"/>
+            <g transform="translate(470 228)"><path class="eng gira vermelha" data-eng="11,76,62,18" style="--v:20s"/></g>
+            <path class="contorno" d="M620 -20 L540 70 L520 150"/>
+            <path class="miolo" d="M620 -20 L540 70 L520 150"/>
+            <circle class="peca" cx="540" cy="70" r="24"/><circle class="rebite" cx="540" cy="70" r="7"/>
+            <path class="contorno fino" d="M520 150 L470 170 L452 210 M520 150 L548 196 L530 236"/>
+            <path class="miolo fino" d="M520 150 L470 170 L452 210 M520 150 L548 196 L530 236"/>
+            <circle class="peca" cx="520" cy="150" r="20"/><circle class="rebite" cx="520" cy="150" r="6"/>
+          </svg>
+        </div>
       </div>
     </article>
 
@@ -364,7 +447,8 @@
       data-desc="Pesquisas e reportagens citadas no trabalho."
       data-detalhes="Referências|9;Período|2011 – 2026" data-cores="#1e1e1e,#8c8c8c,#ebebeb">
       <div class="conteudo">
-        <p class="c-rotulo">Fontes</p>
+        <svg class="eng-canto" viewBox="-120 -120 240 240" aria-hidden="true"><path class="eng gira" data-eng="16,116,98,34" fill="url(#pontos)" style="--v:40s"/></svg>
+        <p class="c-rotulo">Painel 07 — Fontes</p>
         <h2 class="medio">Referências</h2>
         <div class="refs">
           <p>CETIC.BR. <b>Pesquisa TIC Educação 2024</b>. São Paulo: Comitê Gestor da Internet no Brasil, 2025. Disponível em: https://cetic.br. Acesso em: 15 out. 2026.</p>
@@ -391,7 +475,8 @@
   <button id="btn-prev" aria-label="Slide anterior">←</button>
   <span id="contador">1 / 14</span>
   <button id="btn-next" aria-label="Próximo slide">→</button>
-  <button id="btn-overview" class="texto-btn">Visão geral <i>O</i></button>
+  <button id="btn-blocos" class="texto-btn" title="Visão geral em blocos">Blocos <i>O</i></button>
+  <button id="btn-lista" class="texto-btn" title="Visão geral em lista">Lista <i>L</i></button>
   <button id="btn-fullscreen" class="texto-btn">Tela cheia <i>F</i></button>
 </nav>
 
