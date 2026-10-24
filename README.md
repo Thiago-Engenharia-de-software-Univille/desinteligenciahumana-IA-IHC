@@ -21,3 +21,14 @@ A URL guarda o slide atual (`index.html#6`).
 Cada slide é um `<article class="cartao">` em `index.html`. Os atributos `data-*` alimentam o que fica ao redor da pilha:
 `data-titulo`, `data-categoria` e `data-desc` (lista da direita), `data-detalhes` (pares `Rótulo|Valor;…` à esquerda),
 `data-secao` (seção destacada) e `data-cores` (os três quadradinhos). O conteúdo de cada cartão é desenhado em 1200 × 675 px e escalado.
+
+## PDF
+
+`baixar.html` monta todos os slides como páginas (lendo o próprio `index.html`) e oferece o download de
+`desinteligencia-humana.pdf` ou a impressão pelo navegador (uma página 16:9 por slide). Depois de mudar os
+slides, gere o PDF de novo com um servidor local rodando na pasta (`python3 -m http.server 8765`):
+
+```
+google-chrome --headless=new --no-pdf-header-footer --virtual-time-budget=6000 \
+  --print-to-pdf=desinteligencia-humana.pdf http://127.0.0.1:8765/baixar.html
+```

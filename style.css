@@ -486,6 +486,8 @@ body.tela-cheia #esquerda, body.tela-cheia #lista, body.tela-cheia #cores, body.
 #hud button { padding: 4px 2px; }
 #hud button:hover { color: var(--vermelho); }
 #hud .texto-btn { text-decoration: underline; text-underline-offset: 3px; }
+#hud a { color: inherit; padding: 4px 2px; }
+#hud a:hover { color: var(--vermelho); }
 #hud .texto-btn i { font-style: normal; color: var(--apagado); font-size: 11px; margin-left: 2px; }
 #contador { font-variant-numeric: tabular-nums; min-width: 46px; text-align: center; }
 body.modo-parede #hud, body.modo-empurrando #hud, body.modo-hero #btn-blocos, body.modo-hero #btn-lista { opacity: 0; pointer-events: none; }
